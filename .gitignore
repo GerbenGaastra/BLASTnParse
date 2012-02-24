@@ -39,3 +39,7 @@ Thumbs.db
 *.png
 *.jpg
 *.test
+
+# Directories #
+###############
+Build-Package/*
