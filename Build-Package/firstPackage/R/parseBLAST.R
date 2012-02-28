@@ -7,7 +7,7 @@ parseBLAST <- function(BLASTresult) {
   out <- vector("list",2)
   resChr <- regexpr("CHROMOSOME_([IVX]+)?",BLASTresult)
   out[[1]] <- as.character(substr(BLASTresult, resChr+11, resChr + attr(resChr, "match.length") -1))
-  resPos <- regexpr("(Sbjct+)(.{7})([0123456789]{2,})",BLAST)
+  resPos <- regexpr("(Sbjct+)(.{7})([0123456789]{2,})",BLASTresult)
   out[[2]] <- as.character(substr(BLASTresult, resPos+12, resPos + attr(resPos, "match.length") -1))
   names(out) <- c("chr","pos")
   out
