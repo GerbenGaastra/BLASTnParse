@@ -5,7 +5,7 @@
 # on http://www.wormbase.org/db/searches/blast_blat
 # To-Do: Retrieves first n sequences
 
-getPosition <- function(q_seq,eValue="1E+0",db="elegans_genome") {
+getPosition <- function(q_seq,eValue="1E+0",daba="elegans_genome") {
   # setting up parameters
   uriToPost <- "http://www.wormbase.org/db/searches/blast_blat"
   # names list containing all fields and their values
@@ -15,7 +15,7 @@ getPosition <- function(q_seq,eValue="1E+0",db="elegans_genome") {
     blast_app="blastn",
     db="nucl",
     blast_e_value=eValue,
-    database=db,
+    database=daba,
     search_type="blast",
     submit="Submit")
   # Post and download Form
@@ -24,4 +24,6 @@ getPosition <- function(q_seq,eValue="1E+0",db="elegans_genome") {
   result <- parseBLAST(formData)
   result
 }
+
+
 
