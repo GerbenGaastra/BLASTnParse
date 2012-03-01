@@ -35,18 +35,39 @@ write(txt,"outputT.txt")
 setwd("D:/CompMolBio/Centrotype/Sequentie_probes")
 allFiles <- list.files()
 
-#for(i in 1:length(allFiles)) {
-  ### rewrite base files
-  matrixFile <- as.matrix(read.table("sequentie_probesAT1G01010.txt",header=TRUE))
+for(i in 1:length(allFiles)) {
+  ### reading in data file
+  input <- as.matrix(read.table(allFiles[[i]],header=TRUE,row.names=NULL))
+  matrixFile <- cbind(input,rep(NA,nrow(input)))
+  colnames(matrixFile) <- c(colnames(input),"unique")
   query <- NULL
+  #rewriting it to semi FASTA
   for(j in 1:nrow(matrixFile)) {
-    temp1 <- paste(">",rownames(matrixFile)[j],sep="")
-    temp2 <- paste(temp1,matrixFile[j,2],sep="\n")
+    temp1 <- paste(">",matrixFile[j,1],sep="") #row name
+    temp2 <- paste(temp1,matrixFile[j,3],sep="\n") # sequence
     query <- paste(query,temp2,sep="\n")
   }
-  oneFile <- getPosThaliana(query)
-  oneFile <- substr(oneFile,23,nchar(oneFile))
-  tempB <- strsplit(oneFile,"\n")
-  tempC <- strsplit(tempB[[1]],"\t")
-  tempC
-#}
+  # submitting BLAST
+  output <- getPosThaliana(query)
+  # rewriting BLAST output
+  output <- substr(output,23,nchar(output))
+  output <- strsplit(output,"\n")
+  blastFile <- do.call(rbind, strsplit(output[[1]],"\t"))
+  # parsing output
+  
+  for(k in 1:nrow(matrixFile)) {
+    bUnique <- 1 #full match (tested below)
+    rowTemp = which(blastFile[,1] == matrixFile[k,1]) 
+    if( length(rowTemp) != 0) {
+      if( length( which(blastFile[rowTemp,3] == "100.00" & blastFile[rowTemp,5] == "0" & blastFile[rowTemp,6] == "0") ) != 1) {
+        bUnique <- 0 # non unique match
+      }
+    } else {
+      bUnique <- -1 # incomplete or non-match
+    }
+    matrixFile[k,4] <- bUnique
+  }
+  outName <- paste("comp_",allFiles[[i]],sep="")
+  write.table(matrixFile,file=outName,sep="\t")
+
+  }

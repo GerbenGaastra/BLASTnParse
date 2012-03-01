@@ -12,7 +12,6 @@ parseBLAST <- function(BLASTresult) {
   iFullMatch  <- gregexpr("(Identities&nbsp;=&nbsp;60/60+).+?",BLASTresult)[[1]]
   if( length(iFullMatch) > 1) {
     out[[2]] == -2
-    next
   }
   resLen <- regexpr("(Identities&nbsp;=&nbsp;)+([0-9]{1,})",BLASTresult) #length matched 
   out[[3]] <- as.character(substr(BLASTresult, resLen + 23, resLen + attr(resLen, "match.length")- 1))

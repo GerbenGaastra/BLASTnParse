@@ -12,3 +12,7 @@ downloadForm <- function(uri, postValues) {
   }
   HTMLreturn
 }
+
+###
+
+ # html status, moet 200 zijn
