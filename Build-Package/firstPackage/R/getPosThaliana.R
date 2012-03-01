@@ -5,9 +5,6 @@
 # on http://www.wormbase.org/db/searches/blast_blat
 # To-Do: Retrieves first n sequences
 
-query <- ">486029\nCTTCGTTTCCCTCTTCTGCGATTTC\n>486032\nGATTGCACCTTCGATGGCCCTGAAA\n>486033\nGCCACATAGTGACGGCGATGGAAAC\n>486042\nTCGCGCTTCACGAAACGCCTTTCGT\n>486049\nGCTTCCAGAGATAGCCCGACGGCGG\n>486050\nACTCAGCAGCAGTCGTCACGACGTG"
-
-
 getPosThaliana <- function(query,eValue="1E+0",daba="elegans_genome") {
   # setting up parameters
   uriToPost <- "http://www.arabidopsis.org/cgi-bin/Blast/TAIRblast.pl"
@@ -23,16 +20,16 @@ getPosThaliana <- function(query,eValue="1E+0",daba="elegans_genome") {
     ReplyFormat="TABULAR")
     #submit="Run BLAST")
   # Post and download Form
+  Sys.sleep(runif(1))
   formData <- postForm(uriToPost, .params = postValues,style="POST")
+  
   formData
 }
 
-txt <- getPosThaliana()
-write(txt,"outputT.txt")
 
 
 ## read in files
-setwd("D:/CompMolBio/Centrotype/Sequentie_probes")
+setwd("X:/CompMolBiolResearch/Sequentie_probes")
 allFiles <- list.files()
 
 for(i in 1:length(allFiles)) {
@@ -59,15 +56,15 @@ for(i in 1:length(allFiles)) {
     bUnique <- 1 #full match (tested below)
     rowTemp = which(blastFile[,1] == matrixFile[k,1]) 
     if( length(rowTemp) != 0) {
-      if( length( which(blastFile[rowTemp,3] == "100.00" & blastFile[rowTemp,5] == "0" & blastFile[rowTemp,6] == "0") ) != 1) {
-        bUnique <- 0 # non unique match
-      }
+      fullMatched <- which(blastFile[rowTemp,4] == "25" & blastFile[rowTemp,5] == "0" & blastFile[rowTemp,6] == "0") 
+	  if( length(unique(blastFile[rowTemp[fullMatched],9])) != 1 & length(unique(blastFile[rowTemp[fullMatched],10])) != 1) {
+	    bUnique <- 0 # non unique match
+	  }
     } else {
       bUnique <- -1 # incomplete or non-match
     }
     matrixFile[k,4] <- bUnique
   }
-  outName <- paste("comp_",allFiles[[i]],sep="")
+  outName <- paste("X:/CompMolBiolResearch/output/c_",allFiles[[i]],sep="")
   write.table(matrixFile,file=outName,sep="\t")
-
-  }
+}
