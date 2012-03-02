@@ -29,12 +29,14 @@ getPosThaliana <- function(query,eValue="1E+0",daba="elegans_genome") {
 
 
 ## read in files
-setwd("X:/CompMolBiolResearch/Sequentie_probes")
 allFiles <- list.files()
 
 for(i in 1:length(allFiles)) {
   ### reading in data file
+  ##################input <- as.matrix(read.table(allFiles[[i]],header=TRUE,row.names=NULL))
   input <- as.matrix(read.table(allFiles[[i]],header=TRUE,row.names=NULL))
+  
+  ############################3
   matrixFile <- cbind(input,rep(NA,nrow(input)))
   colnames(matrixFile) <- c(colnames(input),"unique")
   query <- NULL
@@ -57,14 +59,14 @@ for(i in 1:length(allFiles)) {
     rowTemp = which(blastFile[,1] == matrixFile[k,1]) 
     if( length(rowTemp) != 0) {
       fullMatched <- which(blastFile[rowTemp,4] == "25" & blastFile[rowTemp,5] == "0" & blastFile[rowTemp,6] == "0") 
-	  if( length(unique(blastFile[rowTemp[fullMatched],9])) != 1 & length(unique(blastFile[rowTemp[fullMatched],10])) != 1) {
-	    bUnique <- 0 # non unique match
-	  }
+      if( length(unique(blastFile[rowTemp[fullMatched],9])) != 1 & length(unique(blastFile[rowTemp[fullMatched],10])) != 1) {
+        bUnique <- 0 # non unique match
+      }
     } else {
       bUnique <- -1 # incomplete or non-match
     }
     matrixFile[k,4] <- bUnique
   }
-  outName <- paste("X:/CompMolBiolResearch/output/c_",allFiles[[i]],sep="")
+  outName <- paste("./output/c_",allFiles[[i]],sep="")
   write.table(matrixFile,file=outName,sep="\t")
 }

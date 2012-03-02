@@ -22,21 +22,3 @@ parseBLAST <- function(BLASTresult) {
 parseBLAST(txt)
 #####################################
 #####  meuk #########################
-
-uriToPost <- "http://www.wormbase.org/db/searches/blast_blat"
-q_seq = "tcgtttattatttgtcaccgggttccatcccccttacgtttgacaatcattgcactcact"
-postValues <- new("list",
-    query_sequence=q_seq,
-    query_type="nucl",
-    blast_app="blastn",
-    db="nucl",
-    blast_e_value="1E+0",
-    database="elegans_genome",
-    search_type="blast",
-    submit="Submit")
-
-
-
-txt <- downloadForm(uriToPost,postValues) 
-
-parseBLAST(txt)
