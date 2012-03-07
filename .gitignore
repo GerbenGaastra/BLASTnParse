@@ -43,4 +43,5 @@ Thumbs.db
 
 # Directories #
 ###############
+Build-Package/BLASTnParse.Rcheck/*
 Build-Package/firstPackage.Rcheck/*

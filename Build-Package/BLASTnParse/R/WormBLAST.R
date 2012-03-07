@@ -3,14 +3,15 @@
 # modified last 24-02-2012
 # Wrapper for Wormblast
 
+
 # adding some control to postForm
-downloadForm <- function(uri, postValues) {
-  if(url.exists(uri)) {
-    HTMLreturn = postForm(uri, .params = postValues)
-  } else {
-    error <- cat("url: ",uri,"not available.\n",sep=" ")
-    stop(error)
-  }
+downloadForm <- function(uri, postValues,handle) {
+  #if(url.exists(uri)) {
+    HTMLreturn = postForm(uri, .params = postValues,curl = handle)
+  #} else {
+  #  error <- cat("url: ",uri,"not available.\n",sep=" ")
+  #  stop(error)
+  #}
   HTMLreturn
 }
 
