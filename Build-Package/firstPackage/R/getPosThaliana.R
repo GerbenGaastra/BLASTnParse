@@ -27,6 +27,12 @@ getPosThaliana <- function(query,eValue="1E+0",daba="elegans_genome") {
 }
 
 
+blastLocal <- function(genome_name="mygenome.fasta",temp_filename = "seq.aligned",task = "blastn", evalue = 0.001){
+  command <- paste("blastn -subject=" , genome_name , " -query=", temp_filename, " -out=", temp_filename,".out -outfmt=6 -task=",task," -evalue=",evalue,sep="")
+  cat(command,"\n")
+  shell(command)
+}
+blastLocal(genome_name="C:/Documents and Settings/gbic/My Documents/CHR_I.fna",temp_filename="C:/Documents and Settings/gbic/My Documents/query.faa")
 
 ## read in files
 allFiles <- list.files()
@@ -51,7 +57,7 @@ for(i in 1:length(allFiles)) {
   # rewriting BLAST output
   output <- substr(output,23,nchar(output))
   output <- strsplit(output,"\n")
-  blastFile <- do.call(rbind, strsplit(output[[1]],"\t"))
+  blastFile <- strsplit(output[[1]],"\t"))
   # parsing output
   
   for(k in 1:nrow(matrixFile)) {

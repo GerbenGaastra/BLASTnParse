@@ -5,9 +5,9 @@
 
 
 # adding some control to postForm
-downloadForm <- function(uri, postValues,handle) {
+downloadForm <- function(uri, postValues, handle) {
   #if(url.exists(uri)) {
-    HTMLreturn = postForm(uri, .params = postValues,curl = handle)
+    HTMLreturn = postForm(uri, .params = postValues, curl = handle)
   #} else {
   #  error <- cat("url: ",uri,"not available.\n",sep=" ")
   #  stop(error)
@@ -35,12 +35,18 @@ parseBLAST <- function(BLASTresult) {
 }
 
 # Performing 1 blast and returns parsed results
-getPosition <- function(q_seq,eValue="1E+0",daba="elegans_genome") {
+getPosition <- function(sequence, eValue="1E+0",daba="elegans_genome", handle = getCurlHandle()) {
   # setting up parameters
+  if(missing(sequence)) stop("No sequence to query for, please provide a sequence")
+  if("RCurl" %in% rownames(installed.packages())){
+    require("RCurl")
+  }else{
+    stop("Please install the RCurl package (install.packages(\"RCurl\")")
+  }
   uriToPost <- "http://www.wormbase.org/db/searches/blast_blat"
   # names list containing all fields and their values
   postValues <- new("list",
-    query_sequence=q_seq,
+    query_sequence=sequence,
     query_type="nucl",
     blast_app="blastn",
     db="nucl",
@@ -49,7 +55,7 @@ getPosition <- function(q_seq,eValue="1E+0",daba="elegans_genome") {
     search_type="blast",
     submit="Submit")
   # Post and download Form
-  formData <-downloadForm(uriToPost,postValues)
+  formData <-downloadForm(uriToPost,postValues,handle = handle)
   # Parsing Post-data
   result <- parseBLAST(formData)
   result

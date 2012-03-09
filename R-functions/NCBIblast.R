@@ -3,24 +3,19 @@
 # modified last 24-02-2012
 # NCBI blast, Qblast
 
-
-
-
-submit <- function(query) {
-  
-  # send ALL the queries!!
+submit <- function(query,eValue) {
+  # building and sending request
   h = basicTextGatherer()
+  hardCoded <- "CMD=Put&PROGRAM=blastn&DATABASE=nt"
+  inputFields <- paste(hardCoded,"&EXPECT=",eValue,"&QUERY=",query,collapse="",sep="")
+  #cat(inputFields,"\n")
   curlPerform(url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi",
     httpheader=c(Accept="text/xml", Accept="multipart/*", 'Content-Type' = "application/x-www-form-urlencoded"),
-    postfields=paste("CMD=Put&PROGRAM=blastn&DATABASE_PREFIX=genomes/c_elegans_chr&DATABASE=nt&QUERY=",query,sep=""),
+    postfields=inputFields,
     writefunction = h$update,
     verbose = TRUE
   )
-  ## ara_chr        arabidopsis chr
-  ## 3702           Arabidopsis thaliana est
-  ## c_elegans_chr  c_elegans chr
-  
-  #parse h$value for RID
+  #parse h$value for RID (request ID) and RTOE (Request time of Execution)
   out <- vector("list",2)
   res1 <- regexpr( "(RID%3D+)([A-Za-z0-9-]{2,})",h$value() )
   res2 <- regexpr( "(RTOE%3D+)([0-9]{1,})",h$value() )
@@ -30,67 +25,80 @@ submit <- function(query) {
   out
 }
 
+# checking status of RID
 check <- function( reqID ) {
   tempres <- getURL(paste("http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?CMD=Get&FORMAT_OBJECT=SearchInfo&RID=",reqID,sep=""))
   res <- regexpr( "(Status=+)([A-Za-z]{1,})",tempres )
   status <- substr(tempres,res+7,res+attr(res,"match.length")-1)
+  #cat("status",status,"\n")
+  out <- 0
   if( status == "READY") {
-    out <- 1
-  } else {
-    out <- 0
+    if ( grep("(ThereAreHits=yes+)",tempres ) ) {
+    out <- 1 #BLAST with results
+    } else { 
+      out <- 2 #BLAST without results
+    }
+  }
+  if( status == "FAILED") {
+    cat("Search", reqID, "failed; please report to blast-help [at] ncbi.nlm.nih.gov.\n", sep=" ")
+    out <- 3 #Unknown error
+  }
+  if( status == "UNKNOWN" ) {
+    cat("Search", reqID, "not found on server on server", sep=" ")
+    out <- 4 #RID already deleted on NCBI server (results lasts 24 hours, of 30minutes for large requests)
   }
   out
 }
 
+# download results of RID, return as table 
 download <- function(reqID) {
    uri <- paste("http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?CMD=Get&FORMAT_TYPE=Text&ALIGNMENT_VIEW=Tabular&RID=",reqID,sep="")
-   res <- getURL(uri)
-   res <- substr(res,regexpr("(hits found)+",res)+11,regexpr("(</PRE>)+",res)-2)
-   res <- strsplit(res,"\\n")
+   res <- getURL(uri) #retrieving from NCBI server
+   res <- substr(res,regexpr("(hits found)+",res)+11,regexpr("(</PRE>)+",res)-2) # removing data before/after table
+   res <- strsplit(res,"\\n") # reformatting table
    res <- do.call(rbind, strsplit(res[[1]],"\\t"))
    colnames(res) <- c("query id", "subject ids", "% identity", "alignment length", "mismatches", "gap opens", "q. start", "q. end", "s. start", "s. end", "evalue", "bit score")
    res
 }
 
-
-
-
+############################################
 # input <- matrix(NA,2,1)
 # rownames(input) <- c("ID1","ID2")
 # colnames(input) <- c("query")
 # input[1,1] = "CTTCGTTTCCCTCTTCTGCGATTTC"
 # input[2,1] = "GATTGCACCTTCGATGGCCCTGAAA"
+# eValue <- "1e-2"
+##########################################
 
-output <- matrix(NA,1,13)
-runBatchBlast <- function(input) {
+runBatchBlast <- function(input,eValue) {
   mRID <- matrix(NA,nrow(input),5)
   rownames(mRID) <- rownames(input)
   colnames(mRID) <- c("query","RID","RTOE","ready","result")
   mRID[,"query"] = input[,"query"]
   mRID[,c("ready","result")] = 0
-  cnt <- 1
-  apply(input,1,function(jj){
-    resSub <- submit(jj["query"])
-    mRID[cnt,"RID"] <- resSub$RID
-    mRID[cnt,"RTOE"] <- resSub$RTOE
-    cnt <<- cnt + 1
-  })
+  #cnt <- 1
+  # lapply(input[,"query"],function(jj,cnt){
+    # resSub <- submit(jj)
+    # mRID[cnt,"RID"] <- resSub$RID
+    # mRID[cnt,"RTOE"] <- resSub$RTOE
+    # cat(cnt,jj,resSub$RID,resSub$RTOE,"\n",sep=" - ")
+    # cnt <<- cnt + 1
+  # },cnt)
+  # send ALL the queries!!
   for( i in 1:nrow(input)) {
-    resSub <- submit(input[i,"query"])
+    resSub <- submit(input[i,"query"],eValue)
     #cat(res[[1]],res[[2]],"\n",sep=" - ")
     mRID[i,"RID"] <- resSub$RID
     mRID[i,"RTOE"] <- resSub$RTOE
   }
+  output <- NULL # defining output column
   while ( any(mRID[,"ready"] == 0)) {
     cat( length(which(mRID[,"ready"] == 0)), "left to do\n", sep=" ")
-    Sys.sleep(runif(1)*10)
-    
-    mRID[,"ready"] <- lapply(mRID[,"RID"],check)
-    
-    mRID[,"ready"] <- apply(mRID,1,function(x){
-      check(x["RID"])
-    })
-    output <- NULL
+    Sys.sleep(runif(1)*5)
+    toDo <- which( mRID[,"ready"] == 0)
+    mRID[toDo,"ready"] <- unlist(lapply(mRID[toDo,"RID"],check))
+    #cat(unlist(lapply(mRID[toDo,"RID"],check)))
+    #print(mRID)
     for( j in 1:nrow(mRID) ) {
       if(mRID[j,"ready"] == 1 & mRID[j,"result"] != 1) {
         res <- download(mRID[j,"RID"])
@@ -104,3 +112,11 @@ runBatchBlast <- function(input) {
   }
   output
 }
+
+input <- matrix(NA,2,1)
+rownames(input) <- c("AGI17","AGI18")
+colnames(input) <- c("query")
+input[1,1] = "CCTAAATTTCTGATTTTCAGAGTTTGAGACCGTTTCGATTCAAACCCCCACCGAACCCAA"
+input[2,1] = "ACAGCTAGGGGAAATGGATCATCAGTAGCCGAGGAGCTCAATTCAAATTCAAAGGAAAAA"
+eValue <- "1e-2"
+runBatchBlast(input,eValue)
