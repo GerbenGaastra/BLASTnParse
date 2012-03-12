@@ -2,10 +2,6 @@
 # created last 24-02-2012
 # modified last 24-02-2012
 
-
-
-
-
 ## Parse raw gene list and return gene synonym, start&end gene
 geneRange <- function(geneFile) {
   rawMatrix <- as.matrix(read.csv(geneFile,skip=2,header=TRUE,sep="\t"))
@@ -18,21 +14,21 @@ geneRange <- function(geneFile) {
   output
 }
 
-check <- function(geneName,entries,geneStart,geneEnd,output) {
+check <- function(geneName,entries,geneStart,geneEnd,blastFile,output) {
   blastRes <- as.matrix(read.table(blastFile,sep="\t",header=FALSE))
-  for(j in j:nrow(output) ) {
+  for(j in 1:nrow(output) ) {
     # probes should be unique
-    currID <-output[i,"ID"]
+    currID <-output[j,"ID"]
     BlastsFromID <- which(blastRes[,1] == currID)
     if( length(BlastsFromID) == 1) {
       # probes should fall into gene range
       if( blastRes[BlastsFromID,9] > geneStart & blastRes[BlastsFromID,10] < geneEnd ) {
-        output[i,"unique"] = "yes"
+        output[j,"unique"] = "yes"
       } else {
-        output[i,"unique"] = "outOfRange"
+        output[j,"unique"] = "outOfRange"
       }
     } else {
-      output[i,"unique"] = "non unique"
+      output[j,"unique"] = "non unique"
     }
   }
   output
@@ -56,12 +52,14 @@ blastThaliana <- function(dirInput,dirBlast,dirOutput,genome,geneFile,eValue) {
   lFilesnPath <- list.files(path=dirInput,full.names=TRUE)
   lFiles <- list.files()
   for(i in 1:length(lFiles)) {
+    cat("reading: ", lFiles[i])
     ## reading in input file and rewriting for blast
     inputFile <- as.matrix(read.table(lFilesnPath[i],skip=1,header=FALSE))
     temp <- fastaRewrite(inputFile[,c(1,3)])
     ## setting up parameters for blast
     fastaFile <- paste(dirBlast,"tempfile.fasta",sep="")
     blastFile <- paste(dirBlast,lFiles[i],".out",sep="")
+    cat(" <<  blasted")
     write(temp, fastaFile)
     # performing blast
     blastLocal(genome,fastaFile,blastFile,evalue=eValue)
@@ -72,35 +70,18 @@ blastThaliana <- function(dirInput,dirBlast,dirOutput,genome,geneFile,eValue) {
     geneEnd <- as.numeric(max(geneInfo[entries,"stop"])) + 400 #flanking correction
     output<- cbind(inputFile,rep(NA,nrow(inputFile)))
     colnames(output) <- c("ID","direction","seq","unique")
-    res <- check(geneName,entries,geneStart,geneEnd,output) # performing check
+    res <- check(geneName,entries,geneStart,geneEnd,blastFile,output) # performing check
+    cat(" << checked","\n",sep="")
     # writing result to file
-    write(res,paste(dirOutput,lFiles[i],".out",sep=""))
+    write.table(res,paste(dirOutput,lFiles[i],".out",sep=""))
   }
 }
 
 
 
-inputDir <- "D:/CompMolBio/BlastLocal/input"
-blastDir <- "D:/CompMolBio/BlastLocal/blastFiles"
-outputDir <- "D:/CompMolBio/Blastlocal/output"
+inputDir <- "D:/CompMolBio/Centrotype/Sequentie_probes"
+blastDir <- "D:/CompMolBio/Centrotype/blastFiles"
+outputDir <- "D:/CompMolBio/Centrotype/output"
 genome <- "D:/CompMolBio/BlastLocal/TAIR10_chr_all.fas"
 geneFile <- "D:/CompMolBio/BlastLocal/NC_003070.ptt"
 blastThaliana(inputDir,blastDir,outputDir,genome,geneFile,0.001)
-
-
-
-
-
-
-
-ids <- unique(blastRes[,1])
-nr <- lapply(ids,function(x){length(which(blastRes[,1]==x))})
-combined <- matrix(c(ids,nr,rep("NA",length(ids))),,3)
-combined[,3] 
-
-  
-  
-  blastLocal(genome_name="C:/Documents and Settings/gbic/My Documents/CHR_I.fna",temp_filename="C:/Documents and Settings/gbic/My Documents/query.faa")
-
-  
-  mInput <- as.matrix(read.table("AGI_WUR_Probes.txt",sep="\t",na.strings = c("NA","","-"),header=TRUE))
