@@ -8,12 +8,13 @@
   Wrapper with headercheck around htmlForm()
 }
 \usage{
-  downloadForm(uri, postValues) 
+  downloadForm(uri, postValues, handle) 
 }
 \arguments{
   \item{uri}{string containing url of form.}
   \item{postValues}{names list with imput fields of the form 
     and their values}
+  \item{handle}{curl handle}
 }
 \details{
 \tabular{ll}{
@@ -48,5 +49,6 @@ postValues <- new("list",
 uriToPost <- "http://www.wormbase.org/db/searches/blast_blat"    
 
 ## Post form and retrieve result
-htmlReturn <- downloadForm(uriToPost, postValues)
+handle = getCurlHandle()
+htmlReturn <- downloadForm(uriToPost, postValues, handle)
 }

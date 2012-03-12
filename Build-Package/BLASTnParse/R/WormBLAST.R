@@ -35,7 +35,7 @@ parseBLAST <- function(BLASTresult) {
 }
 
 # Performing 1 blast and returns parsed results
-getPosition <- function(sequence, eValue="1E+0",daba="elegans_genome", handle = getCurlHandle()) {
+getPosition <- function(sequence, eValue="1E+0",db="elegans_genome", handle = getCurlHandle()) {
   # setting up parameters
   if(missing(sequence)) stop("No sequence to query for, please provide a sequence")
   if("RCurl" %in% rownames(installed.packages())){
@@ -51,7 +51,7 @@ getPosition <- function(sequence, eValue="1E+0",daba="elegans_genome", handle = 
     blast_app="blastn",
     db="nucl",
     blast_e_value=eValue,
-    database=daba,
+    database=db,
     search_type="blast",
     submit="Submit")
   # Post and download Form

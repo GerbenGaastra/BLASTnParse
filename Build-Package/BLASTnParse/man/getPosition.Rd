@@ -9,12 +9,13 @@
   Return contains chromosome, bp position, number of identities.
 }
 \usage{
- getPosition(q_seq,eValue,daba) 
+ getPosition(sequence,eValue,db,handle) 
 }
 \arguments{
-  \item{q_seq}{string containing bp-sequence to BLAST}
+  \item{sequence}{string containing bp-sequence to BLAST}
   \item{eValue}{String containing minimal expectancy of result}
-  \item{daba}{database which wormblast should use}
+  \item{db}{database which wormblast should use}
+  \item{handle}{Specifying curl handle}
 }
 \details{
 \tabular{ll}{
