@@ -35,7 +35,12 @@ check <- function(geneName,entries,geneStart,geneEnd,blastFile,output) {
 }
 
 ## function will break when dirInput contains dirctories
-blastThaliana <- function(dirInput,dirBlast,dirOutput,genome,geneFile,eValue) {
+blastThaliana <- function(input) {
+  
+  inputFile <- as.matrix(read.csv(input,sep="\t"))
+  fastaFile <- fastaRewrite(inputFile[,c("gene","row.names","seq")])
+  
+  
   #setting up parameters
   if( substring(dirOutput,nchar(dirOutput),nchar(dirOutput)) != "/" ) {
     dirOutput <- paste( dirOutput, "/", sep="")
@@ -46,16 +51,18 @@ blastThaliana <- function(dirInput,dirBlast,dirOutput,genome,geneFile,eValue) {
   if( substring(dirInput,nchar(dirInput),nchar(dirInput)) != "/" ) {
     dirInput <- paste( dirInput, "/", sep="")
   }
+  
+  
   ## preparing matrix with information about start&stop bp of genes on chromosome
   geneInfo <- geneRange(geneFile)
   ## lists of files with or without directory
-  lFilesnPath <- list.files(path=dirInput,full.names=TRUE)
-  lFiles <- list.files()
+  
+  cat(lFiles)
   for(i in 1:length(lFiles)) {
     cat("reading: ", lFiles[i])
     ## reading in input file and rewriting for blast
-    inputFile <- as.matrix(read.table(lFilesnPath[i],skip=1,header=FALSE))
-    temp <- fastaRewrite(inputFile[,c(1,3)])
+    
+    temp <- fastaRewrite(inputFile[,c("gene","row.names","seq")])
     ## setting up parameters for blast
     fastaFile <- paste(dirBlast,"tempfile.fasta",sep="")
     blastFile <- paste(dirBlast,lFiles[i],".out",sep="")
