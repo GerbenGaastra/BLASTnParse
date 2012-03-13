@@ -14,11 +14,15 @@ geneRange <- function(geneFile) {
   output
 }
 
-check <- function(geneName,entries,geneStart,geneEnd,blastFile,output) {
-  blastRes <- as.matrix(read.table(blastFile,sep="\t",header=FALSE))
+check <- function(geneName,geneInfo,blastFile,output) {
+  blastRes <- as.matrix(read.table("blastFile.txt",sep="\t",header=FALSE))
   for(j in 1:nrow(output) ) {
+    
+    entries <- which(geneInfo[,"Synonym"] == output[j,"gene") # getting lines containing current gene
+    geneStart <- as.numeric(min(geneInfo[entries,"start"])) - 400 #flanking correction
+    geneEnd <- as.numeric(max(geneInfo[entries,"stop"])) + 400 #flanking correction
     # probes should be unique
-    currID <-output[j,"ID"]
+    currID <-output[j,"row.names"]
     BlastsFromID <- which(blastRes[,1] == currID)
     if( length(BlastsFromID) == 1) {
       # probes should fall into gene range
@@ -34,11 +38,30 @@ check <- function(geneName,entries,geneStart,geneEnd,blastFile,output) {
   output
 }
 
-## function will break when dirInput contains dirctories
-blastThaliana <- function(input) {
+
+input <- "D:/CompMolBio/Centrotype/Sequentie_probes/combined.txt"
+evalue <- 0.001
+genome <- "D:/CompMolBio/BlastLocal/TAIR10_chr_all.fas"
+geneFile <- "D:/CompMolBio/BlastLocal/NC_003070.ptt"
+
+cat("reading input file:", input,"\n",sep=" ")
+inputFile <- as.matrix(read.csv(input,sep="\t"))
+cat("rewriting input to fasta format\n")
+fastaRewrite(inputFile[,c("gene","row.names","seq")])
+
+
+cat("starting BLASTs\n")
+blastLocal(genome_name=genome,fasta_input="input.fasta",output=Path="blastFile.txt",evalue=eValue)
+cat("all BLASTs performed\n")
+## preparing matrix with information about start&stop bp of genes on chromosome
+geneInfo <- geneRange(geneFile)
+cat("extracted starting & ending bp of all genes")
+output<- cbind(inputFile,rep(NA,nrow(inputFile)))
+colnames(output) <- c("gene","row.names","direction","seq","unique")
+res <- check(geneName,entries,geneStart,geneEnd,blastFile,output)
+write.table(res,"output.txt",sep="\t")
   
-  inputFile <- as.matrix(read.csv(input,sep="\t"))
-  fastaFile <- fastaRewrite(inputFile[,c("gene","row.names","seq")])
+  
   
   
   #setting up parameters
@@ -53,8 +76,7 @@ blastThaliana <- function(input) {
   }
   
   
-  ## preparing matrix with information about start&stop bp of genes on chromosome
-  geneInfo <- geneRange(geneFile)
+
   ## lists of files with or without directory
   
   cat(lFiles)
@@ -72,7 +94,7 @@ blastThaliana <- function(input) {
     blastLocal(genome,fastaFile,blastFile,evalue=eValue)
     #prepping parameters for check function
     GeneName <- substring(lFiles[i],17,nchar(lFiles[i])-4) # parsing gene name
-    entries <- which(geneInfo[,"gene"] == GeneName) # getting lines containing current gene
+    
     geneStart <- as.numeric(min(geneInfo[entries,"start"])) - 400 #flanking correction
     geneEnd <- as.numeric(max(geneInfo[entries,"stop"])) + 400 #flanking correction
     output<- cbind(inputFile,rep(NA,nrow(inputFile)))
