@@ -5,12 +5,11 @@
 
 ## function will rebuild its input (form 'matrix[,2]') returns 
 ## a vector which can be written to file as a valid (ncbi) fasta file
-## input collumn 1 must contain the gene description
-## input collumn 2 must contain the id description
-## input collumn 3 must contain the sequence
+## input collumn 1 must contain the fasta ID
+## input collumn 2 must contain the sequence
 fastaRewrite<- function(input) {
   #if( class(input) != "matrix") { stop("'input' is not an matrix") }
-  if( ncol(input) < 2 | ncol(input > 3) { stop("'input' has does not have 2 or 3 collumns") }
+  if( ncol(input) != 2 ) { stop("'input' has does not have 2 collumns") }
   output <- NULL
   write(output,"input.fasta",sep="\t")
   for( i in 1:nrow(input) ) {
@@ -19,13 +18,8 @@ fastaRewrite<- function(input) {
       write(output,"input.fasta",append=TRUE,sep="\t")
       output <- NULL
     }
-    if(ncol(input) == 3) {
-      temp <- "<"
-    } else {
-      temp <- paste(">", input[i,"gene"],sep="")
-    }
-    fastaID <- paste( temp, input[i,"row.names"],sep=";")
-    output <- c(output, fastaID, as.character(input[i,"seq"]) )
+    temp <- paste(">", input[i,1],sep="")
+    output <- c(output, temp, as.character(input[i,2]) )
   }
   write(output,"input.fasta",append=TRUE,sep="\t")
 }

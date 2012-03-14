@@ -34,10 +34,9 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 \keyword{ package }
 \examples{
 ## filling example data
-input <- c("WBGene00007709", "tcgtttattatttgtcaccgggt", "WBGene00017675", "ctccatcccacacacacacactt")
+input <- c("WBGene00007709", "WBGene00017675", "tcgtttattatttgtcaccgggt", "ctccatcccacacacacacactt")
 dim(input) <- c(2,2)
 
-## Post form and retrieve result
-FASTAvector <- fastaRewrite(input)
-FASTAvector <- fastaRewrite(input)
+## Formatting input and writing output to file: 'input.fasta' 
+fastaRewrite(input)
 }
