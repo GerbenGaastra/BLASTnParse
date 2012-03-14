@@ -46,11 +46,14 @@ geneFile <- "D:/CompMolBio/BlastLocal/NC_003070.ptt"
 ###########################################################
 
 cat("reading input file:", input,"\n",sep=" ")
-inputFile <- read.csv(input,sep="\t")
+inputFile <- as.matrix(read.csv(input,sep="\t"))
 cat("rewriting input to fasta format\n")
 ## Two collumns needed, one with fasta ID, one containing the sequences
-fastaRewrite(inputFile[,c("ID","seq")])
-
+fastaID <<- apply(inputFile[,c("gene","row.names")],1,function(x) {
+  paste(">",paste(x["gene"],sub("^ +","",x["row.names"]),sep=";"),sep="")
+})
+forFasta <- matrix( c(fastaID,inputFile[,"seq"]),,2)
+fastaRewrite(forFasta)
 cat("starting BLASTs\n")
 blastLocal(genome,"input2.fasta","blastFile.txt",evalue=evalue)
 cat("all BLASTs performed\n")

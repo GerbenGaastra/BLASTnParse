@@ -9,7 +9,8 @@ blastLocal <- function(genome_name,fasta_input,outputPath,task = "blastn", evalu
   if( missing(fasta_input) ) stop ("Please provide a valid input filename")
   if( !file.exists(genome_name) ) stop("Genome file not found")
   if( !file.exists(fasta_input) ) stop("fasta input file not found")
-  command <- paste("blastn  -subject=" , genome_name , ## see '("blastn -help")' for all options
+  command <- paste("blastn ",
+    " -subject=" , genome_name , ## see '("blastn -help")' for all options
     " -query=", fasta_input,
     " -out=", outputPath,
     " -outfmt=\"6 qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue\"",

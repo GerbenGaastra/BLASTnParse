@@ -11,15 +11,17 @@ fastaRewrite<- function(input) {
   #if( class(input) != "matrix") { stop("'input' is not an matrix") }
   if( ncol(input) != 2 ) { stop("'input' has does not have 2 collumns") }
   output <- NULL
-  write(output,"input.fasta",sep="\t")
+  fp <- file("output.fasta","w")
   for( i in 1:nrow(input) ) {
-    if( (i %% 1000) == 0 ) {
-      cat("parsing row",i,"\n",sep=" ")
-      write(output,"input.fasta",append=TRUE,sep="\t")
-      output <- NULL
-    }
-    temp <- paste(">", input[i,1],sep="")
-    output <- c(output, temp, as.character(input[i,2]) )
+    #if( (i %% 1000) == 0 ) {
+    #  cat("parsing row",i,"\n",sep=" ")
+    #  write(output,"input.fasta",append=TRUE,sep="\t")
+    #  output <- NULL
+    #}
+    writeLines(as.character(input[i,1]), con=fp)
+    writeLines(as.character(input[i,2]), con=fp)
+    
+    
   }
-  write(output,"input.fasta",append=TRUE,sep="\t")
+  close(fp)
 }
