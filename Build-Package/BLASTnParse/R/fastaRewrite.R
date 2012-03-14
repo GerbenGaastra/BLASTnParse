@@ -20,8 +20,6 @@ fastaRewrite<- function(input) {
     #}
     writeLines(as.character(input[i,1]), con=fp)
     writeLines(as.character(input[i,2]), con=fp)
-    
-    
   }
   close(fp)
 }
