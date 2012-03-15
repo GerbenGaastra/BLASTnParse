@@ -8,7 +8,6 @@ NCBIsubmit <- function(query,eValue) {
   h = basicTextGatherer()
   hardCoded <- "CMD=Put&PROGRAM=blastn&DATABASE=nt"
   inputFields <- paste(hardCoded,"&EXPECT=",eValue,"&QUERY=",query,collapse="",sep="")
-  cat(inputFields)
   #cat(inputFields,"\n")
   curlPerform(url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi",
     httpheader=c(Accept="text/xml", Accept="multipart/*", 'Content-Type' = "application/x-www-form-urlencoded"),
@@ -40,7 +39,7 @@ NCBIcheck <- function( reqID ) {
     } else { 
       out <- 2 #BLAST without results
       names(out) <- "READY-0Hits"
-    }
+    } 
   }
   if( status == "FAILED") {
     cat("Search", reqID, "failed; please report to blast-help [at] ncbi.nlm.nih.gov.\n", sep=" ")
@@ -50,78 +49,67 @@ NCBIcheck <- function( reqID ) {
   if( status == "UNKNOWN" ) {
     cat("Search", reqID, "not found on server on server", sep=" ")
     out <- 4 #RID already deleted on NCBI server (results lasts 24 hours, of 30minutes for large requests)names
-    (out) <- "UNKNOWN"
+    names(out) <- "UNKNOWN"
   }
   out
 }
 
-# download results of RID, return as table 
-# NCBIdownload <- function(reqID) {
-   # uri <- paste("http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?CMD=Get&FORMAT_TYPE=Text&ALIGNMENT_VIEW=Tabular&RID=",reqID,sep="")
-   # res <- getURL(uri) #retrieving from NCBI server
-   # res <- substr(res,regexpr("(hits found)+",res)+11,regexpr("(</PRE>)+",res)-2) # removing data before/after table
-   # res <- strsplit(res,"\\n") # reformatting table
-   # res <- do.call(rbind, strsplit(res[[1]],"\\t"))
-   # colnames(res) <- c("query id", "subject ids", "% identity", "alignment length", "mismatches", "gap opens", "q. start", "q. end", "s. start", "s. end", "evalue", "bit score")
-   # res
-# }
+#download results of RID, return as table 
+NCBIdownload <- function(reqID) {
+   uri <- paste("http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?CMD=Get&FORMAT_TYPE=Text&ALIGNMENT_VIEW=Tabular&RID=",reqID,sep="")
+   res <- getURL(uri) #retrieving from NCBI server
+   res <- substr(res,regexpr("(hits found)+",res)+11,regexpr("(</PRE>)+",res)-2) # removing data before/after table
+   res <- strsplit(res,"\\n") # reformatting table
+   res <- do.call(rbind, strsplit(res[[1]],"\\t"))
+   colnames(res) <- c("query id", "subject ids", "% identity", "alignment length", "mismatches", "gap opens", "q. start", "q. end", "s. start", "s. end", "evalue", "bit score")
+   res
+}
 
 ############################################
-# input <- matrix(NA,2,1)
-# rownames(input) <- c("ID1","ID2")
-# colnames(input) <- c("query")
-# input[1,1] = "CTTCGTTTCCCTCTTCTGCGATTTC"
-# input[2,1] = "GATTGCACCTTCGATGGCCCTGAAA"
+# input <- matrix(NA,2,2)
+# input <- c("ID1","ID2","CTTCGTTTCCCTCTTCTGCGATTTC","GATTGCACCTTCGATGGCCCTGAAA")
+# dim(input) <- c(2,2)
+# colnames(input) <- c("ID","query")
 # eValue <- "1e-2"
 ##########################################
 
-# NCBIblast <- function(input,eValue) {
-  # mRID <- matrix(NA,nrow(input),5)
-  # rownames(mRID) <- rownames(input)
-  # colnames(mRID) <- c("query","RID","RTOE","ready","result")
-  # mRID[,"query"] = input[,"query"]
-  # mRID[,c("ready","result")] = 0
-  # cnt <- 1
-  # lapply(input[,"query"],function(jj,cnt){
-    # resSub <- submit(jj)
-    # mRID[cnt,"RID"] <- resSub$RID
-    # mRID[cnt,"RTOE"] <- resSub$RTOE
-    # cat(cnt,jj,resSub$RID,resSub$RTOE,"\n",sep=" - ")
-    # cnt <<- cnt + 1
-  # },cnt)
-  # send ALL the queries!!
-  # for( i in 1:nrow(input)) {
-    # resSub <- submit(input[i,"query"],eValue)
-    #cat(res[[1]],res[[2]],"\n",sep=" - ")
-    # mRID[i,"RID"] <- resSub$RID
-    # mRID[i,"RTOE"] <- resSub$RTOE
-  # }
-  # output <- NULL # defining output column
-  # while ( any(mRID[,"ready"] == 0)) {
-    # cat( length(which(mRID[,"ready"] == 0)), "left to do\n", sep=" ")
-    # Sys.sleep(runif(1)*5)
-    # toDo <- which( mRID[,"ready"] == 0)
-    # mRID[toDo,"ready"] <- unlist(lapply(mRID[toDo,"RID"],check))
-    # cat(unlist(lapply(mRID[toDo,"RID"],check)))
-    # print(mRID)
-    # for( j in 1:nrow(mRID) ) {
-      # if(mRID[j,"ready"] == 1 & mRID[j,"result"] != 1) {
-        # res <- download(mRID[j,"RID"])
-        # sequenc <- matrix(c(rep(rownames(mRID)[j],nrow(res)), rep(mRID[j,"query"], nrow(res)) ), nrow(res),2)
-        # colnames(sequenc) <- c("ID","sequence")
-        # res1 <- cbind(sequenc,res[,-1]) #combining blast result and queries (removing non informational collumn with -1)
-        # output <- rbind(output,res1)
-        # mRID[j,"result"] <- 1 
-      # }
-    # }
-  # }
-  # output
-# }
-
-# input <- matrix(NA,2,1)
-# rownames(input) <- c("AGI17","AGI18")
-# colnames(input) <- c("query")
-# input[1,1] = "CCTAAATTTCTGATTTTCAGAGTTTGAGACCGTTTCGATTCAAACCCCCACCGAACCCAA"
-# input[2,1] = "ACAGCTAGGGGAAATGGATCATCAGTAGCCGAGGAGCTCAATTCAAATTCAAAGGAAAAA"
-# eValue <- "1e-2"
-# runBatchBlast(input,eValue)
+NCBIblast <- function(input,eValue) {
+  mRID <- matrix(NA,nrow(input),6)
+  rownames(mRID) <- rownames(input)
+  colnames(mRID) <- c("ID","query","RID","RTOE","ready","result")
+  mRID[,c("ID","query")] = input
+  mRID[,c("ready","result")] = 0
+  cnt <- 1
+  #send ALL the queries!!
+  lapply(input[,"query"],function(jj){
+    resSub <- NCBIsubmit(jj,eValue)
+    mRID[cnt,"RID"] <<- resSub$RID
+    mRID[cnt,"RTOE"] <<- resSub$RTOE
+    cat(cnt,jj,resSub$RID,resSub$RTOE,"\n",sep=" - ")
+    cnt <<- cnt + 1
+  })
+  #starting check, and if ready, download loop
+  output <- NULL # defining output column
+  while ( any(mRID[,"ready"] == 0)) {
+    Sys.sleep(runif(1)*5)
+    ## make list of unfinished BLASTs
+    toDo <- which( mRID[,"ready"] == 0)
+    cat(length(toDo), "left to do\n", sep=" ")
+    ## apply 'NCBIcheck' to unfinished BLASTs
+    mRID[toDo,"ready"] <- unlist(lapply(mRID[toDo,"RID"],NCBIcheck))
+    j <- 1
+    apply(mRID,1,function(x) {
+      if(x["ready"] == 1 & x["result"] != 1) {
+        res <- NCBIdownload(x["RID"])
+        sequenc <- matrix( c( rep( mRID[j,"ID"],nrow(res)), rep(mRID[j,"query"],nrow(res)) ), nrow(res), 2)
+        colnames(sequenc) <- c("ID","sequence")
+        res1 <- cbind(sequenc,res) #combining blast result and queries 
+        output <<- rbind(output,res1)
+        mRID[j,"result"] <<- 1 
+        
+      }
+      j <<- j + 1
+    })
+  }
+  output
+}
