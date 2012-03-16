@@ -5,20 +5,20 @@
 # on http://www.wormbase.org/db/searches/blast_blat
 # To-Do: Retrieves first n sequences
 
-getPosThaliana <- function(query,eValue="1E+0",daba="elegans_genome") {
+getPosThaliana <- function(query,eValue="1E+0",daba="ATH1_bacs_con") {
   # setting up parameters
   uriToPost <- "http://www.arabidopsis.org/cgi-bin/Blast/TAIRblast.pl"
   # names list containing all fields and their values
   postValues <- new("list",
     Algorithm="blastn",
-    BlastTargetSet="ATH1_seq",
+    BlastTargetSet="ATH1_cds",
     textbox="seq",
     QueryText=query,
     Matrix="Blosum62",
-    Expectation="0.001",
     ReplyVia="BROWSER",
+    Expectation="0.1",
     ReplyFormat="TABULAR")
-    #submit="Run BLAST")
+  #submit="Run BLAST")
   # Post and download Form
   Sys.sleep(runif(1))
   formData <- postForm(uriToPost, .params = postValues,style="POST")
