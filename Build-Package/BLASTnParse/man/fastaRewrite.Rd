@@ -9,11 +9,12 @@
   file in (NCBI) fasta format
 }
 \usage{
-  fastaRewrite(input) 
+  fastaRewrite(input,outFile) 
 }
 \arguments{
   \item{input}{Matrix containing per row on collumn 1 the fasta 
   identifiers and on collumn 2 the corresponding sequence.}
+  \item{outFile}{String containing}
 }
 \details{
 \tabular{ll}{
@@ -36,7 +37,8 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 ## filling example data
 input <- c("WBGene00007709", "WBGene00017675", "tcgtttattatttgtcaccgggt", "ctccatcccacacacacacactt")
 dim(input) <- c(2,2)
+outFile <- "output.fasta"
 
 ## Formatting input and writing output to file: 'input.fasta' 
-fastaRewrite(input)
+fastaRewrite(input,outFile)
 }
