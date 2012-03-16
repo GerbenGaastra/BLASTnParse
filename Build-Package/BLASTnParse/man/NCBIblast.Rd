@@ -8,11 +8,13 @@
   NCBIblast returns matrix containing BLAST results
 }
 \usage{
-  NCBIblast(input,eValue)
+  NCBIblast(input,eValue,program="blastn",db="nt")
 }
 \arguments{
   \item{input}{Matrix with 2 collumns containing in collumn 1 the IDs and in column 2 the sequences}
   \item{eValue}{cuttoff value to filter BLAST results}
+  \item{program}{BLAST program to run, blastn is standard}
+  \item{db}{string, specifying BLAST database}
 }
 \details{
 \tabular{ll}{

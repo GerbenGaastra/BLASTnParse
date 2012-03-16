@@ -12,7 +12,6 @@ fastaRewrite<- function(input,outFile) {
   if( missing(outFile) ) { stop("argument 'outFile' is missing") }
   if( ncol(input) != 2 ) { stop("'input' has does not have 2 collumns") }
   if( mode(outFile) != "character" ) { stop("mode 'outFile' is not a char string") }
-  output <- NULL
   fp <- file(outFile,"w")
   apply( input,1,function(x) {
     writeLines(as.character(x[1]), con=fp)

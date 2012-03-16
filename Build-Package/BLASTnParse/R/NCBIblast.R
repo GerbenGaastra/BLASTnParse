@@ -3,11 +3,11 @@
 # modified last 24-02-2012
 # NCBI blast, Qblast
 
-NCBIsubmit <- function(query,eValue) {
+NCBIsubmit <- function(query,eValue,program="blastn",db="nt") {
   # building and sending request
   h = basicTextGatherer()
   hardCoded <- "CMD=Put&PROGRAM=blastn&DATABASE=nt"
-  inputFields <- paste(hardCoded,"&EXPECT=",eValue,"&QUERY=",query,collapse="",sep="")
+  inputFields <- paste("CMD=Put&PROGRAM=",program,"&DATABASE=",db,"&EXPECT=",eValue,"&QUERY=",query,collapse="",sep="")
   #cat(inputFields,"\n")
   curlPerform(url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi",
     httpheader=c(Accept="text/xml", Accept="multipart/*", 'Content-Type' = "application/x-www-form-urlencoded"),
@@ -73,7 +73,7 @@ NCBIdownload <- function(reqID) {
 # eValue <- "1e-2"
 ##########################################
 
-NCBIblast <- function(input,eValue) {
+NCBIblast <- function(input,eValue,program="blastn",db="nt") {
   mRID <- matrix(NA,nrow(input),6)
   rownames(mRID) <- rownames(input)
   colnames(mRID) <- c("ID","query","RID","RTOE","ready","result")
@@ -82,7 +82,7 @@ NCBIblast <- function(input,eValue) {
   cnt <- 1
   #send ALL the queries!!
   lapply(input[,"query"],function(jj){
-    resSub <- NCBIsubmit(jj,eValue)
+    resSub <- NCBIsubmit(jj,eValue,program,db)
     mRID[cnt,"RID"] <<- resSub$RID
     mRID[cnt,"RTOE"] <<- resSub$RTOE
     cat(cnt,jj,resSub$RID,resSub$RTOE,"\n",sep=" - ")

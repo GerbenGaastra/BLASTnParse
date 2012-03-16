@@ -7,11 +7,13 @@
   Store an BLAST request on the NCBI servers, and returns a vector with the RID (Request ID) and RTOE (request time of execution)
 }
 \usage{
-  NCBIsubmit(query,eValue) 
+  NCBIsubmit(query,eValue,program="blastn",db="nt") 
 }
 \arguments{
   \item{query}{string containing the query sequence}
   \item{eValue}{cuttoff value to filter BLAST results}
+  \item{program}{BLAST program to be run by the NCBI servers}
+  \item{db}{string, specifying BLAST database}
 }
 \details{
 \tabular{ll}{
@@ -32,5 +34,5 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 \keyword{ package }
 \examples{
   ### Send a BLAST request and retrieve the RID and RTOe
-  vectorResult <- NCBIsubmit("GATTGCACCTTCGATGGCCCTGAAA","0.01")
+  vectorResult <- NCBIsubmit("GATTGCACCTTCGATGGCCCTGAAA","0.01","blastn","nt")
 }
