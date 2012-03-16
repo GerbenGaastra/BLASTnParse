@@ -1,5 +1,5 @@
-\name{downloadForm}
-\alias{downloadForm}
+\name{wormDownload}
+\alias{wormDownload}
 \docType{package}
 \title{
   download Form
@@ -8,7 +8,7 @@
   Wrapper with headercheck around htmlForm()
 }
 \usage{
-  downloadForm(uri, postValues, handle) 
+  wormDownload(uri, postValues, handle) 
 }
 \arguments{
   \item{uri}{string containing url of form.}
@@ -50,5 +50,5 @@ uriToPost <- "http://www.wormbase.org/db/searches/blast_blat"
 
 ## Post form and retrieve result
 handle = getCurlHandle()
-htmlReturn <- downloadForm(uriToPost, postValues, handle)
+htmlReturn <- wormDownload(uriToPost, postValues, handle)
 }

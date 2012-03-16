@@ -1,6 +1,5 @@
-\name{parseBLAST}
-\alias{parseBLAST}
-\docType{package}
+\name{wormParse}
+\alias{wormParse}
 \title{
   Parse wormBLAST output
 }
@@ -8,7 +7,7 @@
   Parses relevant information from BLAST result
 }
 \usage{
-  parseBLAST(BLASTresult) 
+  wormParse(BLASTresult) 
 }
 \arguments{
   \item{BLASTresult}{HTML data from downloadForm, containing output
@@ -36,5 +35,5 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 BLASTresult <- "<HTML><BODY><H1>CHROMOSOME_I</H1><P>Sbjct:&nbsp;10184580.</P><BODY></HTML>"    
 
 ## Post form and retrieve result
-list <- parseBLAST(BLASTresult)
+list <- wormParse(BLASTresult)
 }

@@ -5,7 +5,7 @@
 
 
 # adding some control to postForm
-downloadForm <- function(uri, postValues, handle) {
+wormDownload <- function(uri, postValues, handle) {
   #if(url.exists(uri)) {
     HTMLreturn = postForm(uri, .params = postValues, curl = handle)
   #} else {
@@ -17,7 +17,7 @@ downloadForm <- function(uri, postValues, handle) {
 
 # Retrieving position, match length en chromosome from the best hit, 
 # '""' returned if no results present
-parseBLAST <- function(BLASTresult) {
+wormParse <- function(BLASTresult) {
   out <- vector("list",3)
   resChr <- regexpr("CHROMOSOME_([IVX]+)?",BLASTresult) #Chromosome
   out[[1]] <- as.character(substr(BLASTresult, resChr+11, resChr + attr(resChr, "match.length") -1))
@@ -35,7 +35,7 @@ parseBLAST <- function(BLASTresult) {
 }
 
 # Performing 1 blast and returns parsed results
-getPosition <- function(sequence, eValue="1E+0",db="elegans_genome", handle = getCurlHandle()) {
+wormGetPos <- function(sequence, eValue="1E+0",db="elegans_genome", handle = getCurlHandle()) {
   # setting up parameters
   if(missing(sequence)) stop("No sequence to query for, please provide a sequence")
   if("RCurl" %in% rownames(installed.packages())){
@@ -55,8 +55,8 @@ getPosition <- function(sequence, eValue="1E+0",db="elegans_genome", handle = ge
     search_type="blast",
     submit="Submit")
   # Post and download Form
-  formData <-downloadForm(uriToPost,postValues,handle = handle)
+  formData <-wormDownload(uriToPost,postValues,handle = handle)
   # Parsing Post-data
-  result <- parseBLAST(formData)
+  result <- wormParse(formData)
   result
 }

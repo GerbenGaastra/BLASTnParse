@@ -1,5 +1,5 @@
-\name{getPosition}
-\alias{getPosition}
+\name{wormGetPos}
+\alias{wormGetPos}
 \docType{package}
 \title{
   Get position 
@@ -9,7 +9,7 @@
   Return contains chromosome, bp position, number of identities.
 }
 \usage{
- getPosition(sequence,eValue,db,handle) 
+ wormGetPos(sequence,eValue,db,handle) 
 }
 \arguments{
   \item{sequence}{string containing bp-sequence to BLAST}
@@ -39,5 +39,5 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 sequenceOfInterest <- "tcgtttattatttgtcaccgggttccatcccccttacgtttgacaatcattgcactcact"    
 
 ## Sending sequence to wormblast, returning relevant data into list.
-list <- getPosition(sequenceOfInterest)
+list <- wormGetPos(sequenceOfInterest)
 }
