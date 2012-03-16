@@ -3,15 +3,25 @@
 # modified last 24-02-2012
 # Wrapper for Wormblast
 
-
 # adding some control to postForm
-wormDownload <- function(uri, postValues, handle) {
-  #if(url.exists(uri)) {
+wormDownload <- function(sequence, eValue="1E+0", db="elegans_genome", handle = getCurlHandle()) {
+  uri <- "http://www.wormbase.org/db/searches/blast_blat"
+  # names list containing all fields and their values
+  postValues <- new("list",
+    query_sequence=sequence,
+    query_type="nucl",
+    blast_app="blastn",
+    db="nucl",
+    blast_e_value=eValue,
+    database=db,
+    search_type="blast",
+    submit="Submit")
+  if(url.exists(uri)) {
     HTMLreturn = postForm(uri, .params = postValues, curl = handle)
-  #} else {
-  #  error <- cat("url: ",uri,"not available.\n",sep=" ")
-  #  stop(error)
-  #}
+  } else {
+    error <- cat("url: ",uri,"not available.\n",sep=" ")
+    stop(error)
+  }
   HTMLreturn
 }
 
@@ -34,7 +44,7 @@ wormParse <- function(BLASTresult) {
   out
 }
 
-# Performing 1 blast and returns parsed results
+# Performing 1 blast and returns parsed results of the best hit
 wormGetPos <- function(sequence, eValue="1E+0",db="elegans_genome", handle = getCurlHandle()) {
   # setting up parameters
   if(missing(sequence)) stop("No sequence to query for, please provide a sequence")
@@ -43,19 +53,8 @@ wormGetPos <- function(sequence, eValue="1E+0",db="elegans_genome", handle = get
   }else{
     stop("Please install the RCurl package (install.packages(\"RCurl\")")
   }
-  uriToPost <- "http://www.wormbase.org/db/searches/blast_blat"
-  # names list containing all fields and their values
-  postValues <- new("list",
-    query_sequence=sequence,
-    query_type="nucl",
-    blast_app="blastn",
-    db="nucl",
-    blast_e_value=eValue,
-    database=db,
-    search_type="blast",
-    submit="Submit")
   # Post and download Form
-  formData <-wormDownload(uriToPost,postValues,handle = handle)
+  formData <-wormDownload(sequence,eValue,db,handle = handle)
   # Parsing Post-data
   result <- wormParse(formData)
   result

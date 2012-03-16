@@ -16,7 +16,7 @@
   \item{eValue}{String containing minimal expectancy of result}
   \item{db}{database which wormblast should use}
   \item{handle}{Specifying curl handle}
-}
+}   
 \details{
 \tabular{ll}{
 Package: \tab firstPackage\cr
