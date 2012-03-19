@@ -1,8 +1,7 @@
 \name{wormGetPos}
 \alias{wormGetPos}
-\docType{package}
 \title{
-  Get position 
+  Get data of the first BLAST result from wormbase.org
 }
 \description{
   Post BLAST on 'wormblast.org' and returns the best match. 
@@ -12,10 +11,10 @@
  wormGetPos(sequence,eValue,db,handle) 
 }
 \arguments{
-  \item{sequence}{string containing bp-sequence to BLAST}
-  \item{eValue}{String containing minimal expectancy of result}
-  \item{db}{database which wormblast should use}
-  \item{handle}{Specifying curl handle}
+  \item{sequence}{string containing  query sequence to be BLASTed}
+  \item{eValue}{String containing the minimal expectancy value to  result}
+  \item{db}{Database against which should be BLASTed}
+  \item{handle}{The curl handle to bu used, if no handle is provided, one is created at runtime}
 }   
 \details{
 \tabular{ll}{
@@ -33,7 +32,7 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 \references{
 \url{www.rug.nl/gbic}
 }
-\keyword{ package }
+
 \examples{
 ## String containing sequence to allign
 sequenceOfInterest <- "tcgtttattatttgtcaccgggttccatcccccttacgtttgacaatcattgcactcact"    
@@ -41,3 +40,11 @@ sequenceOfInterest <- "tcgtttattatttgtcaccgggttccatcccccttacgtttgacaatcattgcactc
 ## Sending sequence to wormblast, returning relevant data into list.
 list <- wormGetPos(sequenceOfInterest)
 }
+
+\seealso{
+  \code{\link{wormParse}} - Parse chromosome, bp matched and allignmet lenght from wormBLAST output.
+  \code{\link{wormDownload}} - Post and download one BLAST request from wormbase.org.
+}
+
+\keyword{ package }
+
