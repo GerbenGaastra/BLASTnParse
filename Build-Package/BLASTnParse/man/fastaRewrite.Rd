@@ -36,7 +36,6 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 \url{www.rug.nl/gbic}
 \url{http://www.ncbi.nlm.nih.gov/BLAST/blastcgihelp.shtml}
 }
-\keyword{ package }
 \examples{
 ## filling example data
 input <- c("WBGene00007709", "WBGene00017675", "tcgtttattatttgtcaccgggt", "ctccatcccacacacacacactt")
@@ -46,3 +45,4 @@ outFile <- "output.fasta"
 ## Formatting input and writing output to file: 'input.fasta' 
 fastaRewrite(input,outFile)
 }
+\keyword{ manip }
