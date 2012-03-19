@@ -1,7 +1,7 @@
 \name{wormParse}
 \alias{wormParse}
 \title{
-  Parse wormBLAST output
+  Parse chromosome, bp matched and allignmet lenght from wormBLAST output
 }
 \description{
   Parses relevant information from BLAST result
@@ -29,7 +29,6 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 \references{
 \url{www.rug.nl/gbic}
 }
-\keyword{ package }
 \examples{
 ## Much simplified return from downloadForm
 BLASTresult <- "<HTML><BODY><H1>CHROMOSOME_I</H1><P>Sbjct:&nbsp;10184580.</P><BODY></HTML>"    
@@ -37,3 +36,8 @@ BLASTresult <- "<HTML><BODY><H1>CHROMOSOME_I</H1><P>Sbjct:&nbsp;10184580.</P><BO
 ## Post form and retrieve result
 list <- wormParse(BLASTresult)
 }
+\seealso{
+  \code{\link{wormGetPos}} - Get data of the first BLAST result from wormbase.org.
+  \code{\link{wormDownload}} - Post and download one BLAST request from wormbase.org.
+}
+\keyword{ package }
