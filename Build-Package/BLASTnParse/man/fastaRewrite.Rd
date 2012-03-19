@@ -5,16 +5,19 @@
   Rewrite a matrix into vector in fasta format
 }
 \description{
-  rewrites 2 collumn matrix into a vector which can be written to
-  file in (NCBI) fasta format
+  The function \emph{fastaRewrite} converts its input into a fasta format file,
+  The function expects a 2 column dataframe of matrix as input. Each row should 
+  contain on column 1 the fasta identifier, and on column 2 the corresponding
+  sequence. Some very basic error checking on the fasta defline is performed is checkID is true.
 }
 \usage{
-  fastaRewrite(input,outFile) 
+  fastaRewrite(input,outFile,checkID=FALSE) 
 }
 \arguments{
-  \item{input}{Matrix containing per row on collumn 1 the fasta 
+  \item{input}{Matrix containing per row on column 1 the fasta 
   identifiers and on collumn 2 the corresponding sequence.}
-  \item{outFile}{String containing}
+  \item{outFile}{String containing (path and) filename of the desired output file}
+  \item{checkID}{A logical value, indicating whether the fasta identifier should be checked and rewritten}
 }
 \details{
 \tabular{ll}{
@@ -31,6 +34,7 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 }
 \references{
 \url{www.rug.nl/gbic}
+\url{http://www.ncbi.nlm.nih.gov/BLAST/blastcgihelp.shtml}
 }
 \keyword{ package }
 \examples{
