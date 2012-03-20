@@ -27,7 +27,8 @@ wormDownload <- function(query, eValue="1E+0", db="elegans_genome", handle = get
     stop(error)
   }
   if( regexpr("(An error occurred:)+",HTMLreturn) != -1) {
-    error <- substr(htmlRet,(res[[1]][1]+ attr(res[[1]],"match.length")[1]),res[[1]][2]-7)
+    res <- gregexpr("(<div class=\"spacer\">\n    &nbsp;\n</div>    \n\n)+",HTMLreturn)
+    error <- substr(HTMLreturn,(res[[1]][1]+ attr(res[[1]],"match.length")[1]),res[[1]][2]-7)
     stop(paste("wormbase error:",error,sep=" "))
   }
   HTMLreturn
