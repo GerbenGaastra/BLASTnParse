@@ -5,7 +5,7 @@
 }
 \description{
   Performs batch blast on sequences provided in input matrix, 
-  NCBIblast returns matrix containing BLAST results
+  NCBIblast returns matrix containing the BLAST results
 }
 \usage{
   NCBIblast(input,eValue,program="blastn",db="nt")
@@ -32,7 +32,6 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 \references{
 \url{www.rug.nl/gbic}
 }
-\keyword{ package }
 \examples{
   input <- matrix(NA,2,2)
   input <- c("ID1","ID2","CTTCGTTTCCCTCTTCTGCGATTTC","GATTGCACCTTCGATGGCCCTGAAA")
@@ -40,4 +39,9 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
   colnames(input) <- c("ID","query")
   eValue <- "1e-2"
   NCBIblast(input,eValue)
+}
+\seealso{
+  \code{\link{NCBIsubmit}} - Submit single BLAST request to the NCBI servers
+  \code{\link{NCBIcheck}} - Check status of request on NCBI server
+  \code{\link{NCBIdownload}} - Download ready BLAST request
 }

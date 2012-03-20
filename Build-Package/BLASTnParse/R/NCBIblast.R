@@ -3,10 +3,10 @@
 # modified last 24-02-2012
 # NCBI blast, Qblast
 
+# send one query and return the RID and RTOE
 NCBIsubmit <- function(query,eValue,program="blastn",db="nt") {
   # building and sending request
   h = basicTextGatherer()
-  hardCoded <- "CMD=Put&PROGRAM=blastn&DATABASE=nt"
   inputFields <- paste("CMD=Put&PROGRAM=",program,"&DATABASE=",db,"&EXPECT=",eValue,"&QUERY=",query,collapse="",sep="")
   #cat(inputFields,"\n")
   curlPerform(url = "http://www.ncbi.nlm.nih.gov/blast/Blast.cgi",

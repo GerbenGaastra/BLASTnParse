@@ -1,10 +1,10 @@
 \name{NCBIsubmit}
 \alias{NCBIsubmit}
 \title{
-  Submit BLAST request to the NCBI servers
+  Submit single BLAST request to the NCBI servers
 }
 \description{
-  Store an BLAST request on the NCBI servers, and returns a vector with the RID (Request ID) and RTOE (request time of execution)
+  NCBIsubmit stores an BLAST request on the NCBI servers, and returns a vector with the RID (Request ID) and RTOE (request time of execution)
 }
 \usage{
   NCBIsubmit(query,eValue,program="blastn",db="nt") 
@@ -31,8 +31,12 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 \references{
 \url{www.rug.nl/gbic}
 }
-\keyword{ package }
 \examples{
   ### Send a BLAST request and retrieve the RID and RTOe
   vectorResult <- NCBIsubmit("GATTGCACCTTCGATGGCCCTGAAA","0.01","blastn","nt")
+}
+\seealso{
+  \code{\link{NCBIblast}} - Run batch BLAST NCBI
+  \code{\link{NCBIcheck}} - Check status of request on NCBI server
+  \code{\link{NCBIdownload}} - Download ready BLAST request
 }
