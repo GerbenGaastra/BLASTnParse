@@ -64,7 +64,7 @@ wormParse <- function(BLASTresult) {
 # Performing 1 blast and returns parsed results of the best hit
 wormGetPos <- function(query, eValue="1E+0",db="elegans_genome", handle = getCurlHandle()) {
   # setting up parameters
-  if(missing(sequence)) stop("No sequence to query for, please provide a sequence")
+  if(missing(query)) stop("No sequence to query for, please provide a sequence")
   if("RCurl" %in% rownames(installed.packages())){
     require("RCurl")
   }else{
