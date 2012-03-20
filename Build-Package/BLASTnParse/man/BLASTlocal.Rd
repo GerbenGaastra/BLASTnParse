@@ -4,7 +4,7 @@
   Run BLAST locally using NCBI blast+ executable
 }
 \description{
-  BLASTs input fasta file against a genome file, other blast options still have to be implemented
+  BLASTs input fasta file against a subject (for example a genome file), other blast options still have to be implemented
 }
 \usage{
   BLASTlocal(subject.fasta,input.fasta,outputPath,task = "blastn", evalue = 0.0001)
