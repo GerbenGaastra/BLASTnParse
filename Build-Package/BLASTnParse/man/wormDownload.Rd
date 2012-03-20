@@ -8,10 +8,10 @@
   returns the downloaded BLAST result as a string.
 }
 \usage{
-  wormDownload(sequence, eValue="1E+0", db="elegans_genome", handle=getCurlHandle()) 
+  wormDownload(query, eValue="1E+0", db="elegans_genome", handle=getCurlHandle()) 
 }
 \arguments{
-  \item{sequence}{the query sequence, as a character string}
+  \item{query}{the query sequence, as a character string}
   \item{eValue}{expectancy cutoff value to filter BLAST results}
   \item{db}{database to BLAST against, default is the C. elegans genome}
   \item{handle}{the curl handle to bu used, if no handle is provided, one is created at runtime}
@@ -35,13 +35,13 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 }
 \examples{
   ## List of fields and values
-  sequence <-"tcgtttattatttgtcaccgggttccatcccccttacgtttgacaatcattgcactcact"
+  query <-"tcgtttattatttgtcaccgggttccatcccccttacgtttgacaatcattgcactcact"
   eValue <- "1E-16"
   db <- "elegans_genome"
   handle <- getCurlHandle()
   
   ## Post form and retrieve result
-  htmlReturn <- wormDownload(sequence, eValue, db, handle)
+  htmlReturn <- wormDownload(query, eValue, db, handle)
 }
 \seealso{
   \code{\link{wormGetPos}} - Get data of the first BLAST result from wormbase.org.

@@ -8,10 +8,10 @@
   Return contains chromosome, bp position, number of identities.
 }
 \usage{
- wormGetPos(sequence,eValue,db,handle) 
+ wormGetPos(query,eValue,db,handle) 
 }
 \arguments{
-  \item{sequence}{string containing  query sequence to be BLASTed}
+  \item{query}{string containing  query sequence to be BLASTed}
   \item{eValue}{String containing the minimal expectancy value to  result}
   \item{db}{Database against which should be BLASTed}
   \item{handle}{The curl handle to bu used, if no handle is provided, one is created at runtime}

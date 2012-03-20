@@ -4,7 +4,10 @@
   Parse chromosome, bp matched and allignmet lenght from wormBLAST output
 }
 \description{
-  Parses relevant information from BLAST result
+  Parses relevant information from returned by wormDownload. Returns some of
+  the information in a named list. The names of each entry is the name of the
+  corresponding chromosome. At this stage not all available information in the 
+  blast result is parsed.
 }
 \usage{
   wormParse(BLASTresult) 
@@ -30,8 +33,14 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 \url{www.rug.nl/gbic}
 }
 \examples{
-## Much simplified return from downloadForm
-BLASTresult <- "<HTML><BODY><H1>CHROMOSOME_I</H1><P>Sbjct:&nbsp;10184580.</P><BODY></HTML>"    
+## List of fields and values
+query <-"tcgtttattatttgtcaccgggttccatcccccttacgtttgacaatcattgcactcact"
+eValue <- "1E-16"
+db <- "elegans_genome"
+handle <- getCurlHandle()
+
+## Post form and retrieve result
+BLASTresult <- wormDownload(query, eValue, db, handle)
 
 ## Post form and retrieve result
 list <- wormParse(BLASTresult)
