@@ -26,14 +26,12 @@ wormDownload <- function(query, eValue="1E+0", db="elegans_genome", handle = get
     error <- cat("url: ",uri,"not available.\n",sep=" ")
     stop(error)
   }
-  if( grep("(An error occurred:)+",htmlRet)) {
-  #  error <- substr(htmlRet,(res[[1]][1]+ attr(res[[1]],"match.length")[1]),res[[1]][2]-7)
-  #  stop(paste("wormbase error:",error,sep=" "))
-  #}
+  if( regexpr("(An error occurred:)+",HTMLreturn) != -1) {
+    error <- substr(htmlRet,(res[[1]][1]+ attr(res[[1]],"match.length")[1]),res[[1]][2]-7)
+    stop(paste("wormbase error:",error,sep=" "))
+  }
   HTMLreturn
 }
-
-htmlRet <- wormDownload("ATATATATATATACAACTCCTATACCTATACATA","1E-4")
 
 # Retrieving position, match length en chromosome from BLAST result, 
 # If there are no hits, an empty list is returned
