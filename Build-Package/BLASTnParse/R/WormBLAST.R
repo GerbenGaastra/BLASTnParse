@@ -4,11 +4,15 @@
 # Wrapper for Wormblast
 
 # adding some control to postForm
-wormDownload <- function(sequence, eValue="1E+0", db="elegans_genome", handle = getCurlHandle()) {
+wormDownload <- function(query, eValue="1E+0", db="elegans_genome", handle = getCurlHandle()) {
+  if( missing(query) ) { stop("Please provide a query sequence") }
+  if( mode(eValue) != "character" ) { stop("'eValue' must be a character string") }
+  
+  #if( mode(db) != "character" ) { stop("'db' must be a character string") }
   uri <- "http://www.wormbase.org/db/searches/blast_blat"
   # names list containing all fields and their values
   postValues <- new("list",
-    query_sequence=sequence,
+    query_sequence=query,
     query_type="nucl",
     blast_app="blastn",
     db="nucl",
@@ -22,30 +26,44 @@ wormDownload <- function(sequence, eValue="1E+0", db="elegans_genome", handle = 
     error <- cat("url: ",uri,"not available.\n",sep=" ")
     stop(error)
   }
+  if( grep("(An error occurred:)+",htmlRet)) {
+  #  error <- substr(htmlRet,(res[[1]][1]+ attr(res[[1]],"match.length")[1]),res[[1]][2]-7)
+  #  stop(paste("wormbase error:",error,sep=" "))
+  #}
   HTMLreturn
 }
 
-# Retrieving position, match length en chromosome from the best hit, 
-# '""' returned if no results present
+htmlRet <- wormDownload("ATATATATATATACAACTCCTATACCTATACATA","1E-4")
+
+# Retrieving position, match length en chromosome from BLAST result, 
+# If there are no hits, an empty list is returned
 wormParse <- function(BLASTresult) {
-  out <- vector("list",3)
-  resChr <- regexpr("CHROMOSOME_([IVX]+)?",BLASTresult) #Chromosome
-  out[[1]] <- as.character(substr(BLASTresult, resChr+11, resChr + attr(resChr, "match.length") -1))
-  resPos <- regexpr("(Sbjct+)(.{7})([0123456789]{2,})",BLASTresult) #bp position
-  out[[2]] <- as.character(substr(BLASTresult, resPos+12, resPos + attr(resPos, "match.length") -1))
-  iFullMatch  <- gregexpr("(Identities&nbsp;=&nbsp;60/60+).+?",BLASTresult)[[1]]
-  if( length(iFullMatch) > 1) {
-    out[[2]] == -2 ## error code, more than 1 full match
-  }
-  resLen <- regexpr("(Identities&nbsp;=&nbsp;)+([0-9]{1,})",BLASTresult) #length matched 
-  out[[3]] <- as.character(substr(BLASTresult, resLen + 23, resLen + attr(resLen, "match.length")- 1))
-  
-  names(out) <- c("chr","pos","nrOfMatches")
-  out
+  ## seperating results per chromosome and discarding header
+  report_hit <- strsplit(BLASTresult,"(report_hit)+")[[1]][-1]
+  namesChr <-unlist(lapply(report_hit,function(x) { 
+    resChr <-regexpr("CHROMOSOME_([IVX]+)?",x)
+    as.character(substr(x, resChr+11, resChr + attr(resChr, "match.length") -1))
+  }))
+  names(report_hit) <- namesChr
+  ## seperating each hit per chromosomere
+  hits <- lapply(report_hit,function(x) {strsplit(x,"(Score)+")[[1]][-1] })
+  lapply(hits,function(x) {
+    do.call( rbind, lapply(x,
+      function(y) {
+        out <- vector("list",2)
+        resPos <- regexpr("(Sbjct+)(.{7})([0123456789]{2,})",y) #bp position
+        out[1] <- as.character(substr(y, resPos+12, resPos + attr(resPos, "match.length") -1))
+        resLen <- regexpr("(Identities&nbsp;=&nbsp;)+([0-9]{1,})",y) #length matched 
+        out[[2]] <- as.character(substr(y, resLen + 23, resLen + attr(resLen, "match.length")- 1))
+        names(out) <- c("bp-mapped","length matched")
+        out
+      })
+    )
+  })
 }
 
 # Performing 1 blast and returns parsed results of the best hit
-wormGetPos <- function(sequence, eValue="1E+0",db="elegans_genome", handle = getCurlHandle()) {
+wormGetPos <- function(query, eValue="1E+0",db="elegans_genome", handle = getCurlHandle()) {
   # setting up parameters
   if(missing(sequence)) stop("No sequence to query for, please provide a sequence")
   if("RCurl" %in% rownames(installed.packages())){
@@ -54,7 +72,7 @@ wormGetPos <- function(sequence, eValue="1E+0",db="elegans_genome", handle = get
     stop("Please install the RCurl package (install.packages(\"RCurl\")")
   }
   # Post and download Form
-  formData <-wormDownload(sequence,eValue,db,handle = handle)
+  formData <-wormDownload(query,eValue,db,handle = handle)
   # Parsing Post-data
   result <- wormParse(formData)
   result
