@@ -5,37 +5,27 @@
 # on http://www.wormbase.org/db/searches/blast_blat
 # To-Do: Retrieves first n sequences
 
-getPosThaliana <- function(matrixFile,eValue="1E+0",db="ATH1_bacs_con") {
-  query <- NULL
-  for(j in 1:nrow(matrixFile)) {
-    temp1 <- paste(">",matrixFile[j,1],sep="") #row name
-    temp2 <- paste(temp1,matrixFile[j,2],sep="\n") # sequence
-    query <- paste(query,temp2,sep="\n")
-  }
+getPosThaliana <- function(query,eValue="1E+0",daba="ATH1_bacs_con") {
   # setting up parameters
   uriToPost <- "http://www.arabidopsis.org/cgi-bin/Blast/TAIRblast.pl"
   # names list containing all fields and their values
   postValues <- new("list",
     Algorithm="blastn",
-    BlastTargetSet=db,
+    BlastTargetSet="ATH1_cds",
     textbox="seq",
     QueryText=query,
     Matrix="Blosum62",
     ReplyVia="BROWSER",
-    Expectation=eValue,
+    Expectation="0.1",
     ReplyFormat="TABULAR")
   #submit="Run BLAST")
   # Post and download Form
   Sys.sleep(runif(1))
   formData <- postForm(uriToPost, .params = postValues,style="POST")
-  comments <- c("Query id", "Subject id", "identity", "alignment length", "mismatches", "gap openings", "q. start", "q. end", "s. start", "s. end", "e-value", "bit score")
-  formData <- substr(formData,23,nchar(formData))
-  formData <- strsplit(formData,"\n")
-  blastFile <- strsplit(formData[[1]],"\t")
-  blastFile
+  
+  formData
 }
 
-temp <- matrix(c("IDx","TGAGACGAGACGATTGAC"),1,2)
 
 ## read in files
 allFiles <- list.files()
