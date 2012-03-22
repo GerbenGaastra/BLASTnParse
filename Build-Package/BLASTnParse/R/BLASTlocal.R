@@ -8,6 +8,7 @@
 BLASTlocal <- function(subject.fasta,input.fasta,outputPath,task = "blastn", evalue = 0.0001){
   if( missing(subject.fasta) ) stop ("Please provide a valid genome filename")
   if( missing(input.fasta) ) stop ("Please provide a valid input filename")
+  if( missing(outputPath) ) stop ("Please provide a valid output filename")
   if( !file.exists(subject.fasta) ) stop("Genome file not found")
   if( !file.exists(input.fasta) ) stop("fasta input file not found")
   installed <- system("blastn -help",ignore.stderr=TRUE,ignore.stdout=TRUE,show.output.on.console=FALSE)
