@@ -1,0 +1,28 @@
+\documentclass[a4paper]{article}
+\usepackage{Sweave}
+\usepackage{url}
+\addtolength{\oddsidemargin}{-.5in}
+\addtolength{\evensidemargin}{-.5in}
+\addtolength{\textwidth}{1in}
+\begin{document}
+
+\section*{Verslag Screenscrape}
+
+Met de steeds verder snellere ontwikkeling van technieken in de moleculaire biologie waarin data wordt gegenereerd worden ook automatisch de vraag naar goede data analyse groter. Een vaak terugkerden onderdeel van deze analyses is het, vaak op grote schaal, BLASTen. Voluit staat BLAST voor Basic Local Alignment Search Tool en bestaat uit een verzameling algorithmes om biologische sequenties met elkaar te vergelijken. BLAST kan bijvoorbeeld gebruikt worden wanneer van een stuk genetische code wilt weten of er al vergelijkbare sequenties bekend zijn, en zo ja, wat zijn deze in hoe vergelijkbaar zijn deze?\\
+
+Een van de technieken waarbij tijdens de data analyse op grote schaal vraag kan zijn naar het uitvoeren van BLASTs zijn microarrays. Bij deze arrays worden veel probes (DNA/RNA sequenties van ongeveer 25 tot 100 nucleotiden lang)\lq\lq nog ff bron zoeken\rq\rq gebruikt. Wanneer van deze probes de locatie op het genoom niet bekend is kan BLAST hierbij uitkomst bieden. Echter is dit zonder goede automatisering een lastige klus gezien de aantallen probes makkelijk in de tienduizenden kan lopen.\\
+
+Een van de doelen van het screenscrape project was het verzamelen schrijven en verzamelen vna functies die het verwerken waarbij grote datasets met sequenties op een gemakkelijke en repliceerbare manier kunnen worden geBLAST.\\
+
+De eerste benadering om een deel van dit probleem op te lossen was het uitzoeken hoe het webformulier van wormbase\cite{Wormbase} \\
+
+\renewcommand{\refname}{Referenties}
+
+\begin{thebibliography}{9}
+  \bibitem{Wormbase}
+    Wormbase, \emph{Wormbase Release WS229}. \url{www.wormbase.org/db/searches/blast_blat} Bezocht op: 21-04-2012, 3:56.
+   \bibitem{qblast}
+    NCBI QBlast, \emph{Tao Tao, PhD}. \url{ncbi.nlm.nih.gov/staff/tao/URLAPI/new/BLAST_URLAPI.html} Bezocht op: 21-04-2012, 4:19.
+\end{thebibliography}
+
+\end{document}
