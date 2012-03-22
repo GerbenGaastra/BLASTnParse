@@ -46,5 +46,3 @@ list <- wormGetPos(sequenceOfInterest)
   \code{\link{wormDownload}} - Post and download one BLAST request from wormbase.org.
 }
 
-\keyword{ package }
-

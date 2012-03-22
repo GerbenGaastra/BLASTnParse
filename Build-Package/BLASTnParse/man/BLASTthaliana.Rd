@@ -1,11 +1,10 @@
 \name{BLASTthaliana}
 \alias{BLASTthaliana}
 \title{
-  Send a blast request to wormbase en parse out position
+  Send a blast request to Arabidopsis.org and recieve a named vector
 }
 \description{
-  Post BLAST on 'wormblast.org' and returns the best match. 
-  Return contains chromosome, bp position, number of identities.
+  Post an BLAST request on 'arabidopsis.org', results are parsed to an vector
 }
 \usage{
   BLASTthaliana(ID,query,eValue="1E+0",db="ATH1_bacs_con")
