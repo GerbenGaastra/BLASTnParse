@@ -1,12 +1,28 @@
 \documentclass[a4paper]{article}
+%--------------------%
+% Including packages %
+%--------------------%
 \usepackage{Sweave}
 \usepackage{url}
+\usepackage[dutch]{babel}
+%-----------------%
+% Setting margins %
+%-----------------%
 \addtolength{\oddsidemargin}{-.5in}
 \addtolength{\evensidemargin}{-.5in}
 \addtolength{\textwidth}{1in}
-\begin{document}
+%-----------------%
+% Some basic info %
+%-----------------%
+\title{Screenscrape project}
+\author{G.T Gaastra, 1532162}
+\date{\today}
 
-\section*{Verslag Screenscrape}
+
+\begin{document}
+\maketitle
+
+\section*{Introductie}
 
 Met de steeds verder snellere ontwikkeling van technieken in de moleculaire biologie waarin data wordt gegenereerd worden ook automatisch de vraag naar goede data analyse groter. Een vaak terugkerden onderdeel van deze analyses is het, vaak op grote schaal, BLASTen. Voluit staat BLAST voor Basic Local Alignment Search Tool en bestaat uit een verzameling algorithmes om biologische sequenties met elkaar te vergelijken. BLAST kan bijvoorbeeld gebruikt worden wanneer van een stuk genetische code wilt weten of er al vergelijkbare sequenties bekend zijn, en zo ja, wat zijn deze in hoe vergelijkbaar zijn deze?\\
 
