@@ -30,18 +30,11 @@ Een van de technieken waarbij tijdens de data analyse op grote schaal vraag kan 
 \section{BLAST via Wormbase.org}
 De eerste benadering om een deel van dit probleem op te lossen was het uitzoeken hoe het BLAST formulier van wormbase\cite{Wormbase} via R aangesproken kon worden. Uiteindelijk is voor de functie \code{postForm} van het R-pakket RCurl gekozen.
 
-\begin{Schunk}
-\begin{Sinput}
-> require(BLASTnParse)
-> query <- "TCGAGACGCGATGAAACA"
-> wormGetPos( query)
-\end{Sinput}
-\begin{Soutput}
-$V
-     bp-mapped  length matched
-[1,] "17649157" "15"          
-\end{Soutput}
-\end{Schunk}
+<<>>=
+require(BLASTnParse)
+query <- "TCGAGACGCGATGAAACA"
+wormGetPos( query)
+@
 
 %-------------%
 % Referenties %
