@@ -74,6 +74,45 @@ Een in potentie meer generieke oplossing is het vanuit R aanspreken van Qblast\c
 \begin{Schunk}
 \begin{Sinput}
 > ## build input
-> input <- matrix(c("ID1","ID2","CTTCGTTTCCCTCTTCTGCGATTTC","GATTGCACCTTCGATGGCCCTGAAA"),2,2)
+> input <- matrix(c("ID1","agcacctcctggatatgctcgattttcaatcgtacctccattgtcagcggcagatttaaa"),1,2)
+> eValue <- "0.0001"
 > ## send BLASTs
-> NCBIblast(input)
+> NCBIblast(input,eValue)
+\end{Sinput}
+\begin{Soutput}
+     ID    sequence                                                      
+[1,] "ID1" "agcacctcctggatatgctcgattttcaatcgtacctccattgtcagcggcagatttaaa"
+[2,] "ID1" "agcacctcctggatatgctcgattttcaatcgtacctccattgtcagcggcagatttaaa"
+     query id subject ids                    % identity alignment length
+[1,] "46419"  "gi|17533284|ref|NM_061866.1|" "100.00"   "60"            
+[2,] "46419"  "gi|351061752|emb|FO081165.1|" "100.00"   "35"            
+     mismatches gap opens q. start q. end s. start s. end  evalue  bit score
+[1,] "0"        "0"       "1"      "60"   "825"    "884"   "1e-21" " 109"   
+[2,] "0"        "0"       "26"     "60"   "30666"  "30632" "5e-08" "64.4"   
+\end{Soutput}
+\end{Schunk}
+\section*{NCBI local}
+\section*{Overige functies}
+\section*{Persoonlijke ervaring vak}
+
+
+%-------------%
+% Referenties %
+%-------------%
+\renewcommand{\refname}{Referenties}
+\begin{thebibliography}{9}
+  \bibitem{Rcran}
+    R Development Core Team, \emph{R: A Language and Environment for Statistical Computing}
+    \url{www.R-project.org} 2011.
+  \bibitem{RCurl}
+    General network (HTTP/FTP/...) client interface for R, \emph{Duncan Temple Lang}, version 1.91.1.
+  \bibitem{Wormbase}
+    Wormbase, \emph{Wormbase Release WS229}. \url{www.wormbase.org/db/searches/blast_blat} Bezocht op: 21-04-2012, 3:56.
+  \bibitem{qblast}
+    NCBI QBlast, \emph{Tao Tao, PhD}. \url{ncbi.nlm.nih.gov/staff/tao/URLAPI/new/BLAST_URLAPI.html} Bezocht op: 21-04-2012, 4:19.
+  \bibitem{Arab}
+    TAIR BLAST 2.2.8, \emph{Carnegie Institution for Science Department of Plant Biology}, Bezocht op:22-04-2012 16:06
+
+\end{thebibliography}
+
+\end{document}

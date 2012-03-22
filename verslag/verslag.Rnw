@@ -60,8 +60,9 @@ Een in potentie meer generieke oplossing is het vanuit R aanspreken van Qblast\c
 
 <<>>=
 ## build input
-input <- matrix(c("ID1","agcacctcctggatatgctcgattttcaatcgtacctccattgtcagcggcagatttaaa"),1,2)
-eValue <- "0.01"
+input <- matrix(c("ID1",
+  "agcacctcctggatatgctcgattttcaatcgtacctccattgtcagcggcagatttaaa"),1,2)
+eValue <- "0.0001"
 ## send BLASTs
 NCBIblast(input,eValue)
 @
