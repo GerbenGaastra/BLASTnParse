@@ -41,6 +41,7 @@ Thumbs.db
 *.jpg
 *.test
 *.aux
+*.sty
 
 # Directories #
 ###############
