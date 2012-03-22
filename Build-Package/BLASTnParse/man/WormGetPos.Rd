@@ -1,7 +1,7 @@
 \name{wormGetPos}
 \alias{wormGetPos}
 \title{
-  Send a blast request to wormbase en parse out position
+  Send BLAST request to wormbase.org
 }
 \description{
   Post BLAST on 'wormblast.org' and returns the best match. 
