@@ -33,7 +33,7 @@ NCBIcheck <- function( reqID ) {
   #cat("status",status,"\n")
   out <- 0
   if( status == "READY") {
-    if ( grep("(ThereAreHits=yes+)",tempres ) ) {
+    if ( regexpr("(ThereAreHits=yes+)",tempres ) != -1 ) {
     out <- 1 #BLAST with results
     names(out) <- "READY+hits"
     } else { 
@@ -73,7 +73,7 @@ NCBIdownload <- function(reqID) {
 # eValue <- "1e-2"
 ##########################################
 
-NCBIblast <- function(input,eValue,program="blastn",db="nt") {
+NCBIblast <- function(input,eValue,program="blastn",db="nt",verbose=FALSE) {
   mRID <- matrix(NA,nrow(input),6)
   rownames(mRID) <- rownames(input)
   colnames(mRID) <- c("ID","query","RID","RTOE","ready","result")
@@ -81,11 +81,11 @@ NCBIblast <- function(input,eValue,program="blastn",db="nt") {
   mRID[,c("ready","result")] = 0
   cnt <- 1
   #send ALL the queries!!
-  lapply(input[,"query"],function(jj){
+  lapply(mRID[,"query"],function(jj){
     resSub <- NCBIsubmit(jj,eValue,program,db)
     mRID[cnt,"RID"] <<- resSub$RID
     mRID[cnt,"RTOE"] <<- resSub$RTOE
-    cat(cnt,jj,resSub$RID,resSub$RTOE,"\n",sep=" - ")
+    #cat(cnt,jj,resSub$RID,resSub$RTOE,"\n",sep=" - ")
     cnt <<- cnt + 1
   })
   #starting check, and if ready, download loop
@@ -94,7 +94,7 @@ NCBIblast <- function(input,eValue,program="blastn",db="nt") {
     Sys.sleep(runif(1)*5)
     ## make list of unfinished BLASTs
     toDo <- which( mRID[,"ready"] == 0)
-    cat(length(toDo), "left to do\n", sep=" ")
+    if(verbose) { cat(length(toDo), "left to do\n", sep=" ") }
     ## apply 'NCBIcheck' to unfinished BLASTs
     mRID[toDo,"ready"] <- unlist(lapply(mRID[toDo,"RID"],NCBIcheck))
     j <- 1

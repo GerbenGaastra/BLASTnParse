@@ -8,13 +8,14 @@
   NCBIblast returns matrix containing the BLAST results
 }
 \usage{
-  NCBIblast(input,eValue,program="blastn",db="nt")
+  NCBIblast(input,eValue,program="blastn",db="nt",verbose=FALSE)
 }
 \arguments{
   \item{input}{Matrix with 2 collumns containing in collumn 1 the IDs and in column 2 the sequences}
   \item{eValue}{cuttoff value to filter BLAST results}
   \item{program}{BLAST program to run, blastn is standard}
   \item{db}{string, specifying BLAST database}
+  \item{verbose}{logical, states whether progres should be printed to terminal}
 }
 \details{
 \tabular{ll}{
