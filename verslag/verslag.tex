@@ -39,8 +39,8 @@ Een van de technieken waarbij tijdens de data analyse op grote schaal vraag kan 
 \section*{Methode}
 
 Een van de doelen van het screenscrape project was het verzamelen schrijven en verzamelen van functies voor R\cite{Rcran} die het verwerken waarbij grote datasets met sequenties op een gemakkelijke en repliceerbare manier kunnen worden geBLAST.  Om deze functies uiteindelijk goed beschikbaar te maken is er gekozen om deze binnen een zogenaamd R Package, genaamd BLASTnParse, te verzamelen.
-
-\section*{BLAST via webformulier}
+\section*{Beschrijving functies}
+\subsection*{BLAST via webformulier}
 
 De eerste benadering om een deel van dit probleem op te lossen was het uitzoeken hoe het BLAST formulier van wormbase\cite{Wormbase} via R aangesproken kon worden. Om de site binnen R aan te kunnen spreken is $postForm$ van het R-pakket RCurl\cite{RCurl} gekozen. In het pakket BLASTnParse is de functie wormGetPos opgenomen waarin een query naar wormbase kan worden gedaan en die een lijst teruggeeft aan de gebruiker. De functie $BLASTthalina$ is vergelijkbaar maar stuurt de resultaten door naar Arabidopsis.org\cite{Arab}. Zie onderstaaande voorbeelden.
 
@@ -68,31 +68,41 @@ $V
 \end{Soutput}
 \end{Schunk}
 
-\section*{NCBI qblast}
-Een in potentie meer generieke oplossing is het vanuit R aanspreken van Qblast\cite{qblast}, een online api van NCBI om
+\subsection*{NCBI Qblast}
+Een in potentie meer generieke oplossing is het vanuit R aanspreken van Qblast\cite{qblast}. Naast Qblast word hier ook wel naar gerefereerd als NCBI urlapi. Voor deze urlapi zijn een aantal functies geschreven om verzoeken te kunnen sturen, te kunnen checken of de verzoeken afgerond zijn, en een om de resultaten te downloaden. De functie NCBIblast combineerd deze functies met de mogelijkheid om deze in Batch te draaien. Door onduidelijke documentatie van NCBI is het op dit moment nog niet goed mogelijk de BLAST tot een bepaalde database of organisme te beperken.
 
 \begin{Schunk}
 \begin{Sinput}
 > ## build input
-> input <- matrix(c("ID1","agcacctcctggatatgctcgattttcaatcgtacctccattgtcagcggcagatttaaa"),1,2)
-> eValue <- "0.0001"
+> q1 <- c("ID1","agcacctcctggatatgctcgattttcaatcgtacctccattgtcagcggcagatttaaa")
+> q2 <- c("ID2","aatccttcatgtgcaattgggaacgatacaccgtaccagggagaatcatttgtgctcaac")
+> input <- matrix(c(q1,q2),2,2,byrow=TRUE)
+> eValue <- "0.000000001"
 > ## send BLASTs
 > NCBIblast(input,eValue)
 \end{Sinput}
 \begin{Soutput}
      ID    sequence                                                      
 [1,] "ID1" "agcacctcctggatatgctcgattttcaatcgtacctccattgtcagcggcagatttaaa"
-[2,] "ID1" "agcacctcctggatatgctcgattttcaatcgtacctccattgtcagcggcagatttaaa"
-     query id subject ids                    % identity alignment length
-[1,] "46419"  "gi|17533284|ref|NM_061866.1|" "100.00"   "60"            
-[2,] "46419"  "gi|351061752|emb|FO081165.1|" "100.00"   "35"            
+[2,] "ID2" "aatccttcatgtgcaattgggaacgatacaccgtaccagggagaatcatttgtgctcaac"
+[3,] "ID2" "aatccttcatgtgcaattgggaacgatacaccgtaccagggagaatcatttgtgctcaac"
+     query id subject ids                     % identity alignment length
+[1,] "29459"  "gi|17533284|ref|NM_061866.1|"  "100.00"   "60"            
+[2,] "17281"  "gi|193209368|ref|NM_077612.4|" "100.00"   "60"            
+[3,] "17281"  "gi|1054678|emb|Z67734.1|"      "100.00"   "60"            
      mismatches gap opens q. start q. end s. start s. end  evalue  bit score
 [1,] "0"        "0"       "1"      "60"   "825"    "884"   "1e-21" " 109"   
-[2,] "0"        "0"       "26"     "60"   "30666"  "30632" "5e-08" "64.4"   
+[2,] "0"        "0"       "1"      "60"   "913"    "972"   "1e-21" " 109"   
+[3,] "0"        "0"       "1"      "60"   "11383"  "11442" "1e-21" " 109"   
 \end{Soutput}
 \end{Schunk}
-\section*{NCBI local}
-\section*{Overige functies}
+\subsection*{NCBI local}
+De functie $NCBIlocal$ kan gebruikt worden vanaf Windowns en wanneer het BLAST+ executables opgenomen zijn in de PATH-variablen. Op dit moment kan NCBIlocal sequenties uit twee bestanden tegen elkaar BLASTen. Beide bestanden moeten opgesteld zijn als NCBI fasta bestanden\cite{NCBIfasta}. Het input bestand kan bijvoorbeeld een verzameling probes bevatten. Het subject bestand zal gewoonlijk een genoom of chromosoom sequentie omvatten. Zowel alle input en output bestanden worden respetievelijk van de harde schijf geleven/geschreven.
+\subsection*{Overige functies}
+Voor het omzetten van een matrix of dataframe met probe namen en sequenties naar een bestand in FASTA-formaat kan de functie $fastaRewrie$ gebruikt worden. Deze functie is vooral nuttig in combinatie met $BLASTlocal$ en schrijft daarom zijn resultaat direct naar de HDD.
+
+Voor het verwerken van BLAST resultaten kan het nuttig zijn om te weten bij welke basenummers en al geanotteerd gen start en eindigt. Veel van deze gegevens zijn beschikbaar op de FTP-servers van NCBI\cite{NCBIftp}. De functie $geneRange$ interpreteerd .ptt en .rtn bestanden en geeft de start en stop posities van de beschikbare genen weer.
+
 \section*{Persoonlijke ervaring vak}
 
 
@@ -111,8 +121,12 @@ Een in potentie meer generieke oplossing is het vanuit R aanspreken van Qblast\c
   \bibitem{qblast}
     NCBI QBlast, \emph{Tao Tao, PhD}. \url{ncbi.nlm.nih.gov/staff/tao/URLAPI/new/BLAST_URLAPI.html} Bezocht op: 21-04-2012, 4:19.
   \bibitem{Arab}
-    TAIR BLAST 2.2.8, \emph{Carnegie Institution for Science Department of Plant Biology}, Bezocht op:22-04-2012 16:06
-
+    TAIR BLAST 2.2.8, \emph{Carnegie Institution for Science Department of Plant Biology}, Bezocht op: 22-04-2012 16:06.
+  \bibitem{NCBIfasta}
+    FASTA description, \url{http://www.ncbi.nlm.nih.gov/BLAST/blastcgihelp.shtml}, Bezocht op: 23-04-2012 11:14.
+  \bibitem{NCBIftp}
+    NCBI ftp servers, \url{ftp://ftp.ncbi.nih.gov/genomes/}, bezocht op 23-04-2012 11:30
+  
 \end{thebibliography}
 
 \end{document}
