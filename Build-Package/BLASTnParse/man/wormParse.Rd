@@ -16,15 +16,6 @@
   \item{BLASTresult}{HTML data from downloadForm, containing output
     from wormblast form.}
 }
-\details{
-\tabular{ll}{
-Package: \tab firstPackage\cr
-Type: \tab Package\cr
-Version: \tab 0.0.1-0\cr
-Date: \tab 2012-02-21\cr
-License: \tab GPL (>= 3)\cr
-}
-}
 \author{
 Author: Gerben Gaastra
 Maintainer: Gerben Gaastra <gaastra@gtga.nl>

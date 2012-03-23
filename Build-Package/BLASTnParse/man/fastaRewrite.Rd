@@ -19,15 +19,6 @@
   \item{outFile}{String containing (path and) filename of the desired output file}
   \item{checkID}{A logical value, indicating whether the fasta identifier should be checked and rewritten}
 }
-\details{
-\tabular{ll}{
-Package: \tab firstPackage\cr
-Type: \tab Package\cr
-Version: \tab 0.0.1-0\cr
-Date: \tab 2012-02-21\cr
-License: \tab GPL (>= 3)\cr
-}
-}
 \author{
 Author: Gerben Gaastra
 Maintainer: Gerben Gaastra <gaastra@gtga.nl>
