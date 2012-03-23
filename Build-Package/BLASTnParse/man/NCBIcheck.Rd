@@ -17,10 +17,11 @@
 Author: Gerben Gaastra
 Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 }
-value{
+\value{
   A '0' is returned when the status of the RID is unfinished, a '2' is returned for a finished job which has no results, a '3' is returned for a failure on the NCBI server (please contact blast-help [at] ncbi.nlm.nih.gov, a returned '4' indicates an unknown RID, this means a wrom or an expired RID. 
   
   Finally an returned 1 indicates an finished job with results.
+}
 \references{
 \url{http://www.ncbi.nlm.nih.gov/BLAST/Doc/urlapi.html}, 
 \url{www.rug.nl/gbic}

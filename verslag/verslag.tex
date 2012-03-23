@@ -8,15 +8,16 @@
 %-----------------%
 % Setting margins %
 %-----------------%
-\addtolength{\oddsidemargin}{-.25in}
-\addtolength{\evensidemargin}{-.25in}
-\addtolength{\textwidth}{.5in}
+\addtolength{\oddsidemargin}{-.5in}
+\addtolength{\evensidemargin}{-.5in}
+\addtolength{\textwidth}{1.0in}
 %-----------------%
 % Some basic info %
 %-----------------%
 \title{Screenscrape project}
 \author{G.T Gaastra, 1532162}
 \date{\today}
+
 
 
 \begin{document}
@@ -31,19 +32,16 @@
 %--------------%
 
 \section*{Introductie}
-
 Met de steeds verder snellere ontwikkeling van technieken in de moleculaire biologie waarin data wordt gegenereerd worden ook automatisch de vraag naar goede data analyse groter. Een vaak terugkerden onderdeel van deze analyses is het, vaak op grote schaal, BLASTen. Voluit staat BLAST voor Basic Local Alignment Search Tool en bestaat uit een verzameling algorithmes om biologische sequenties met elkaar te vergelijken. BLAST kan bijvoorbeeld gebruikt worden wanneer van een stuk genetische code wilt weten of er al vergelijkbare sequenties bekend zijn, en zo ja, wat zijn deze in hoe vergelijkbaar zijn deze?
 
 Een van de technieken waarbij tijdens de data analyse op grote schaal vraag kan zijn naar het uitvoeren van BLASTs zijn microarrays. Bij deze arrays worden veel probes (DNA/RNA sequenties van ongeveer 25 tot 100 nucleotiden lang) gebruikt. Wanneer van deze probes de locatie op het genoom niet bekend is kan BLAST hierbij uitkomst bieden. Echter is dit zonder goede automatisering een lastige klus gezien de aantallen probes makkelijk in de tienduizenden kan lopen. 
 
 \section*{Methode}
-
 Een van de doelen van het screenscrape project was het verzamelen schrijven en verzamelen van functies voor R\cite{Rcran} die het verwerken waarbij grote datasets met sequenties op een gemakkelijke en repliceerbare manier kunnen worden geBLAST.  Om deze functies uiteindelijk goed beschikbaar te maken is er gekozen om deze binnen een zogenaamd R Package, genaamd BLASTnParse, te verzamelen.
+
 \section*{Beschrijving functies}
 \subsection*{BLAST via webformulier}
-
 De eerste benadering om een deel van dit probleem op te lossen was het uitzoeken hoe het BLAST formulier van wormbase\cite{Wormbase} via R aangesproken kon worden. Om de site binnen R aan te kunnen spreken is $postForm$ van het R-pakket RCurl\cite{RCurl} gekozen. In het pakket BLASTnParse is de functie wormGetPos opgenomen waarin een query naar wormbase kan worden gedaan en die een lijst teruggeeft aan de gebruiker. De functie $BLASTthalina$ is vergelijkbaar maar stuurt de resultaten door naar Arabidopsis.org\cite{Arab}. Zie onderstaaande voorbeelden.
-
 \begin{Schunk}
 \begin{Sinput}
 > ## Send Query to wormblast.org
@@ -59,18 +57,15 @@ $V
 > BLASTthaliana( ID="queryID", query="GACCCGAGAAAATCCAAGACCTATG" )
 \end{Sinput}
 \begin{Soutput}
-        Query id       Subject id         identity alignment length 
-       "queryID"           "F6F3"         "100.00"             "25" 
-      mismatches     gap openings         q. start           q. end 
-             "0"              "0"              "1"             "25" 
-        s. start           s. end          e-value        bit score 
-         "58525"          "58549"          "1e-06"           "50.1" 
+     Query id  Subject id identity alignment length mismatches gap openings
+[1,] "queryID" "F6F3"     "100.00" "25"             "0"        "0"         
+     q. start q. end s. start s. end  e-value bit score
+[1,] "1"      "25"   "58525"  "58549" "1e-06" "50.1"   
 \end{Soutput}
 \end{Schunk}
 
 \subsection*{NCBI Qblast}
 Een in potentie meer generieke oplossing is het vanuit R aanspreken van Qblast\cite{qblast}. Naast Qblast word hier ook wel naar gerefereerd als NCBI urlapi. Voor deze urlapi zijn een aantal functies geschreven om verzoeken te kunnen sturen, te kunnen checken of de verzoeken afgerond zijn, en een om de resultaten te downloaden. De functie NCBIblast combineerd deze functies met de mogelijkheid om deze in Batch te draaien. Door onduidelijke documentatie van NCBI is het op dit moment nog niet goed mogelijk de BLAST tot een bepaalde database of organisme te beperken.
-
 \begin{Schunk}
 \begin{Sinput}
 > ## build input
@@ -87,24 +82,35 @@ Een in potentie meer generieke oplossing is het vanuit R aanspreken van Qblast\c
 [2,] "ID2" "aatccttcatgtgcaattgggaacgatacaccgtaccagggagaatcatttgtgctcaac"
 [3,] "ID2" "aatccttcatgtgcaattgggaacgatacaccgtaccagggagaatcatttgtgctcaac"
      query id subject ids                     % identity alignment length
-[1,] "29459"  "gi|17533284|ref|NM_061866.1|"  "100.00"   "60"            
-[2,] "17281"  "gi|193209368|ref|NM_077612.4|" "100.00"   "60"            
-[3,] "17281"  "gi|1054678|emb|Z67734.1|"      "100.00"   "60"            
+[1,] "37959"  "gi|17533284|ref|NM_061866.1|"  "100.00"   "60"            
+[2,] "9043"   "gi|193209368|ref|NM_077612.4|" "100.00"   "60"            
+[3,] "9043"   "gi|1054678|emb|Z67734.1|"      "100.00"   "60"            
      mismatches gap opens q. start q. end s. start s. end  evalue  bit score
 [1,] "0"        "0"       "1"      "60"   "825"    "884"   "1e-21" " 109"   
 [2,] "0"        "0"       "1"      "60"   "913"    "972"   "1e-21" " 109"   
 [3,] "0"        "0"       "1"      "60"   "11383"  "11442" "1e-21" " 109"   
 \end{Soutput}
 \end{Schunk}
+
 \subsection*{NCBI local}
-De functie $NCBIlocal$ kan gebruikt worden vanaf Windowns en wanneer het BLAST+ executables opgenomen zijn in de PATH-variablen. Op dit moment kan NCBIlocal sequenties uit twee bestanden tegen elkaar BLASTen. Beide bestanden moeten opgesteld zijn als NCBI fasta bestanden\cite{NCBIfasta}. Het input bestand kan bijvoorbeeld een verzameling probes bevatten. Het subject bestand zal gewoonlijk een genoom of chromosoom sequentie omvatten. Zowel alle input en output bestanden worden respetievelijk van de harde schijf geleven/geschreven.
+De functie $NCBIlocal$ kan gebruikt worden vanaf Windowns en wanneer het BLAST+ executables opgenomen zijn in de PATH-variablen. Op dit moment kan NCBIlocal sequenties uit twee bestanden tegen elkaar BLASTen. Beide bestanden moeten opgesteld zijn als NCBI fasta bestanden\cite{NCBIfasta}. Het input bestand kan bijvoorbeeld een verzameling probes bevatten. Het subject bestand zal gewoonlijk een genoom of chromosoom sequentie omvatten. Zowel alle input en output bestanden worden respetievelijk van de harde schijf gelezen/geschreven.
+
 \subsection*{Overige functies}
 Voor het omzetten van een matrix of dataframe met probe namen en sequenties naar een bestand in FASTA-formaat kan de functie $fastaRewrie$ gebruikt worden. Deze functie is vooral nuttig in combinatie met $BLASTlocal$ en schrijft daarom zijn resultaat direct naar de HDD.
 
 Voor het verwerken van BLAST resultaten kan het nuttig zijn om te weten bij welke basenummers en al geanotteerd gen start en eindigt. Veel van deze gegevens zijn beschikbaar op de FTP-servers van NCBI\cite{NCBIftp}. De functie $geneRange$ interpreteerd .ptt en .rtn bestanden en geeft de start en stop posities van de beschikbare genen weer.
 
 \section*{Persoonlijke ervaring vak}
+De 6 weken die voor \emph{Computational Molecular Biology Research} staan zijn in rap tempo omgevlogen. De eerste week met de tutorial was erg nuttig. Doordat ik al eens met R gewerkt had en al iets vaker geprogrameeerd dan de andereen merkte ik dat ik een soort vraagbaak werd. Dit heb ik op een gegeven moment wat afgeremd omdat ik zelf nergens meer aan toe kwam.
 
+Na de eerste week was ik blij dat we los mochten met het project. Het was voor mij niet direct duidelijk wat ik moest gaan doen, daarom ben ik mij maar eerst gaan inlezen in hoe een r-package te maken. Daarna ben ik aan de slag gegaan met het blast formulier van wormbase.org. Al het begin is moeilijk en het er waren was af en toe best wat geploeter nodig om ogenschijnlijk simpele dingen op te lossen. Met deze nog vrij simpele functies heb ik toch al een dataset voor Joeri kunnen verwerken.
+
+Het ploeteren kwam tot een hoogtepunt bij het uitzoeken van hoe het NCBI qblast/urlapi programma werkte (welk naampje ze willen me zelfs nog niet eens duidelijk). De documentatie van NCBI was mager en soms misleidend, en heeft me veel tijdsverlies opgeleverd. Op een gegeven moment heb ik Danny toch maar even gevraagd of er niet een andere oplossing was. Dit had ik wellicht iets eerder moeten doen.
+Hierna ben ik overgestapt op de lokale blast+ oplossing van NCBI, deze was aanmerkelijk prettiger en sneller om mee te werken. Hiermee kon ik ook een tweede dataset van Joeri en een dataset van Bart mee verwerken. 
+
+sHierna heb ik veel documentatie geschreven en functies omgeschreven zodat ze in het package BLASTnParse konden worden opgenomen. Rond deze tijd had ik soms niet echt een goed overzicht nu precies van mij verwacht werd aan het eind van het vak. Verder is het sowieso bij dit vak lastig te bepalen hoe er beoordeeld word, en of je op weg bent naar een onvoldoende of juist naar een mooi cijfer. 
+
+Al met al denk ik dat dit een van de leukste, zo niet het leukste vak van het jaar zal zijn.
 
 %-------------%
 % Referenties %
@@ -126,7 +132,7 @@ Voor het verwerken van BLAST resultaten kan het nuttig zijn om te weten bij welk
     FASTA description, \url{http://www.ncbi.nlm.nih.gov/BLAST/blastcgihelp.shtml}, Bezocht op: 23-04-2012 11:14.
   \bibitem{NCBIftp}
     NCBI ftp servers, \url{ftp://ftp.ncbi.nih.gov/genomes/}, bezocht op 23-04-2012 11:30
-  
 \end{thebibliography}
+
 
 \end{document}
