@@ -1,10 +1,10 @@
 \name{NCBIdownload}
 \alias{NCBIdownload}
 \title{
-  Download ready BLAST request
+  Retrieve ready BLAST request
 }
 \description{
-  Downloads completed BLAST result, and returns it in matrix format.
+  Downloads the completed BLAST result from the NCBI server, and returns as a matrix.
 }
 \usage{
   NCBIdownload( reqID ) 
@@ -17,6 +17,7 @@ Author: Gerben Gaastra
 Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 }
 \references{
+\url{http://www.ncbi.nlm.nih.gov/BLAST/Doc/urlapi.html}, 
 \url{www.rug.nl/gbic}
 }
 \examples{
@@ -27,7 +28,7 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
     }
 }
 \seealso{
-  \code{\link{NCBIblast}} - Run batch BLAST NCBI
-  \code{\link{NCBIsubmit}} - Submit single BLAST request to the NCBI servers
+  \code{\link{NCBIblast}} - Run batch BLAST NCBI, 
+  \code{\link{NCBIsubmit}} - Submit single BLAST request to the NCBI servers, 
   \code{\link{NCBIcheck}} - Check status of request on NCBI server
 }

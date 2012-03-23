@@ -14,8 +14,7 @@
   fastaRewrite(input,outFile,checkID=FALSE) 
 }
 \arguments{
-  \item{input}{Matrix containing per row on column 1 the fasta 
-  identifiers and on collumn 2 the corresponding sequence.}
+  \item{input}{Matrix containing on column 1 the fasta identifiers and on collumn 2 the corresponding sequence.}
   \item{outFile}{String containing (path and) filename of the desired output file}
   \item{checkID}{A logical value, indicating whether the fasta identifier should be checked and rewritten}
 }
@@ -24,8 +23,8 @@ Author: Gerben Gaastra
 Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 }
 \references{
+\url{http://www.ncbi.nlm.nih.gov/BLAST/blastcgihelp.shtml}, 
 \url{www.rug.nl/gbic}
-\url{http://www.ncbi.nlm.nih.gov/BLAST/blastcgihelp.shtml}
 }
 \examples{
 ## filling example data
