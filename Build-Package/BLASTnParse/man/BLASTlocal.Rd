@@ -21,8 +21,7 @@ Author: Gerben Gaastra
 Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 }
 \references{
-\url{www.rug.nl/gbic}\\
-\url{http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download}
+\url{www.rug.nl/gbic}, \url{http://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download}
 }
 \examples{
   ## some example data

@@ -33,7 +33,7 @@ list <- wormGetPos(sequenceOfInterest)
 }
 
 \seealso{
-  \code{\link{wormParse}} - Parse chromosome, bp matched and allignmet lenght from wormBLAST output.
+  \code{\link{wormParse}} - Parse chromosome, bp matched and allignmet lenght from wormBLAST output.R
   \code{\link{wormDownload}} - Post and download one BLAST request from wormbase.org.
 }
 
