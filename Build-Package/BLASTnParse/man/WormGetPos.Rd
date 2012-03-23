@@ -1,7 +1,7 @@
 \name{wormGetPos}
 \alias{wormGetPos}
 \title{
-  Send BLAST request to wormbase.org
+  Perform BLAST request to wormbase.org
 }
 \description{
   Post BLAST on 'wormblast.org' and returns the best match. 
@@ -11,16 +11,17 @@
  wormGetPos(query,eValue,db,handle) 
 }
 \arguments{
-  \item{query}{string containing  query sequence to be BLASTed}
-  \item{eValue}{String containing the minimal expectancy value to  result}
-  \item{db}{Database against which should be BLASTed}
-  \item{handle}{The curl handle to bu used, if no handle is provided, one is created at runtime}
+  \item{query}{string containing  query sequence to be BLASTed.}
+  \item{eValue}{String containing the minimal expectancy value, used to filter BLAST results.}
+  \item{db}{catabase against which should be BLASTed.}
+  \item{handle}{the curl handle to be used, if no handle is provided, one is created at runtime.}
 }   
 \author{
 Author: Gerben Gaastra
 Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 }
 \references{
+\url{http://www.wormbase.org/db/searches/blast_blat}, 
 \url{www.rug.nl/gbic}
 }
 

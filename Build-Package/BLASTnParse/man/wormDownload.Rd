@@ -1,11 +1,11 @@
 \name{wormDownload}
 \alias{wormDownload}
 \title{
-  Post and download one BLAST request from wormbase.org
+  Send and download one BLAST request from wormbase.org
 }
 \description{
-  The function \emph{wormDownlaod} posts the form on arabidopsis.org and 
-  returns the downloaded BLAST result as a string.
+  The function \emph{wormDownoad} fill out the BLAST form on arabidopsis.org and 
+  returns the raw BLAST result as a string.
 }
 \usage{
   wormDownload(query, eValue="1E+0", db="elegans_genome", handle=getCurlHandle()) 
@@ -21,7 +21,7 @@ Author: Gerben Gaastra
 Maintainer: Gerben Gaastra <gaastra@gtga.nl>
 }
 \references{
-\url{http://www.wormbase.org/db/searches/blast_blat}
+\url{http://www.wormbase.org/db/searches/blast_blat}, 
 \url{www.rug.nl/gbic}
 }
 \examples{
@@ -35,7 +35,7 @@ Maintainer: Gerben Gaastra <gaastra@gtga.nl>
   htmlReturn <- wormDownload(query, eValue, db, handle)
 }
 \seealso{
-  \code{\link{wormGetPos}} - Get data of the first BLAST result from wormbase.org.
+  \code{\link{wormGetPos}} - Get data of the first BLAST result from wormbase.org, 
   \code{\link{wormParse}} - Parse chromosome, bp matched and allignmet lenght from wormBLAST output.
 }
 \keyword{ package }
