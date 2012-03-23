@@ -7,7 +7,7 @@ Authors@R: c(person("Gerben", "Gaastra", role=c("aut", "cre"), email =
         "gaastra@gtga.nl"))
 Author: GT Gaastra
 Maintainer: GT Gaastra <gaastra@gtga.nl>
-Depends: R (>= 1.14.1), xtable, RCurl
+Depends: R (>= 1.14.1), RCurl
 Description: Contains functions to automate BLASTs
 License: GPL (>= 3)
 URL: http://www.r-project.org, http://www.rug.nl/gbic
