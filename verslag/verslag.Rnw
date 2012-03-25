@@ -1,10 +1,11 @@
-\documentclass[a4paper]{article}
+\documentclass[10pt]{article}
 %--------------------%
 % Including packages %
 %--------------------%
 \usepackage{Sweave}
 \usepackage{url}
 \usepackage[dutch]{babel}
+\usepackage[a4paper]{geometry}
 %-----------------%
 % Setting margins %
 %-----------------%
@@ -30,38 +31,42 @@
 %--------------%
 % Sweave setup %
 %--------------%
+\SweaveOpts{keep.source=TRUE} 
 <<echo=false,results=hide>>=
 ## load required r packages
 require(BLASTnParse)
 @
 
-\section*{Introductie}
-Met de steeds verder snellere ontwikkeling van technieken in de moleculaire biologie waarin data wordt gegenereerd worden ook automatisch de vraag naar goede data analyse groter. Een vaak terugkerden onderdeel van deze analyses is het, vaak op grote schaal, BLASTen. Voluit staat BLAST voor Basic Local Alignment Search Tool en bestaat uit een verzameling algorithmes om biologische sequenties met elkaar te vergelijken. BLAST kan bijvoorbeeld gebruikt worden wanneer van een stuk genetische code wilt weten of er al vergelijkbare sequenties bekend zijn, en zo ja, wat zijn deze in hoe vergelijkbaar zijn deze?
 
-Een van de technieken waarbij tijdens de data analyse op grote schaal vraag kan zijn naar het uitvoeren van BLASTs zijn microarrays. Bij deze arrays worden veel probes (DNA/RNA sequenties van ongeveer 25 tot 100 nucleotiden lang) gebruikt. Wanneer van deze probes de locatie op het genoom niet bekend is kan BLAST hierbij uitkomst bieden. Echter is dit zonder goede automatisering een lastige klus gezien de aantallen probes makkelijk in de tienduizenden kan lopen. 
+\section*{Introductie}
+Met het beschikbaar komen van technieken zoals bijvoorbeeld 'microarrays' en 'whole genome sequencing' voor de moleculaire bioloog word de datastroom die binnen dit vakgebied gegenereerd wordt ook steeds groter. Het is vaak aan de bio-informaticus om uit de ruwe data die word aangeleverd de interessante informatie te destilleren. Dat de datastroom in de voorzienbare toekomst alleen maar groter zal worden is alleen al door de afnemende kosten voor sequencing aannemelijk\cite{seq}.
+
+Een vaak terugkerend onderdeel bij onderzoek binnen de bioinformatica is sequentie analyse. Voor het vergelijken van sequenties bestaan al verschillende algoritmes, waaronder  bijvoorbeeld BLAST\cite{BLAST}. BLAST kan bijvoorbeeld gebruikt worden wanneer van een stuk genetische code wilt weten of er al vergelijkbare sequenties bekend zijn, en zo ja, wat zijn deze in hoe vergelijkbaar zijn deze?
+
+Een toepassing waarbij BLAST van pas kan komen is bijvoorbeeld bij de verwerking van microarrays. Bij micrarrays worden grote verzamelingen korte dna/rna stukjes gebruikt. Voor de analayse van de resultaten is het vaak zaak goed uit te zoeken of deze maar op een plek, en zo ja, waar op het genoom kunnen aligneren (sequence alignment).
 
 \section*{Methode}
-Een van de doelen van het screenscrape project was het verzamelen schrijven en verzamelen van functies voor R\cite{Rcran} die het verwerken waarbij grote datasets met sequenties op een gemakkelijke en repliceerbare manier kunnen worden geBLAST.  Om deze functies uiteindelijk goed beschikbaar te maken is er gekozen om deze binnen een zogenaamd R Package, genaamd BLASTnParse, te verzamelen.
+Dit verslag beschrijft een project waarin een poging is gedaan om het uitvoeren grote aantallen BLASTs binnen de statistische taal R\cite{Rcran} te vergemakkelijken. Verschillende functies zijn gebundeld binnen een R addonpakket genaamd "BLASTnParse"
 
 \section*{Beschrijving functies}
 \subsection*{BLAST via webformulier}
-De eerste benadering om een deel van dit probleem op te lossen was het uitzoeken hoe het BLAST formulier van wormbase\cite{Wormbase} via R aangesproken kon worden. Om de site binnen R aan te kunnen spreken is $postForm$ van het R-pakket RCurl\cite{RCurl} gekozen. In het pakket BLASTnParse is de functie wormGetPos opgenomen waarin een query naar wormbase kan worden gedaan en die een lijst teruggeeft aan de gebruiker. De functie $BLASTthalina$ is vergelijkbaar maar stuurt de resultaten door naar Arabidopsis.org\cite{Arab}. Zie onderstaaande voorbeelden.
+Een veelgebruikte methode om BLASTs uit te voeren is via webformulieren. De achterliggende functie die hiervoor gekozen is $postForm$ komt uit het R-pakket RCurl\cite{RCurl}.In BLASTnParse zijn twee functies opgenomen die hieromheen geschreven zijn. De eerste is de functie $wormGetPos$ waarin een query naar wormbase\cite{Wormbase} kan worden gedaan en die een lijst teruggeeft aan de gebruiker. De functie $BLASTthalina$ is vergelijkbaar maar stuurt de resultaten door naar Arabidopsis.org\cite{Arab}. Zie onderstaande voorbeelden.
 <<>>=
-## Send Query to wormblast.org
+## BLAST sequentie via wormblast.org
 wormGetPos( query="TCGAGACGCGATGAAACA" )
-## Send Query to arabidopsis.org
+## Verzend sequentie naar arabidopsis.org
 BLASTthaliana( ID="queryID", query="GACCCGAGAAAATCCAAGACCTATG" )
 @
 
 \subsection*{NCBI Qblast}
-Een in potentie meer generieke oplossing is het vanuit R aanspreken van Qblast\cite{qblast}. Naast Qblast word hier ook wel naar gerefereerd als NCBI urlapi. Voor deze urlapi zijn een aantal functies geschreven om verzoeken te kunnen sturen, te kunnen checken of de verzoeken afgerond zijn, en een om de resultaten te downloaden. De functie NCBIblast combineerd deze functies met de mogelijkheid om deze in Batch te draaien. Door onduidelijke documentatie van NCBI is het op dit moment nog niet goed mogelijk de BLAST tot een bepaalde database of organisme te beperken.
+Een in potentie meer generieke oplossing is het vanuit R aanspreken van Qblast\cite{qblast}. Naast Qblast word hier ook wel naar gerefereerd als NCBI urlapi. Het voordeel van deze methode is dat het versturen en het downloaden van de resultaten gescheiden is. Voor deze urlapi zijn een aantal functies geschreven om verzoeken te kunnen sturen, te kunnen checken of de verzoeken afgerond zijn, en een om de resultaten te downloaden. De functie NCBIblast combineert deze functies met de mogelijkheid om een tabel met sequenties in een keer af te handelen. Mede door onduidelijke documentatie van NCBI is het op dit moment nog niet goed mogelijk de BLAST tot een bepaalde database of organisme te beperken. Hieronder is een voorbeeld van deze functie opgenomen.
 <<>>=
-## build input
+## Opzetten voorbeeld tabel
 q1 <- c("ID1","agcacctcctggatatgctcgattttcaatcgtacctccattgtcagcggcagatttaaa")
 q2 <- c("ID2","aatccttcatgtgcaattgggaacgatacaccgtaccagggagaatcatttgtgctcaac")
 input <- matrix(c(q1,q2),2,2,byrow=TRUE)
 eValue <- "0.000000001"
-## send BLASTs
+## Verwerk de BLAST verzoeken
 NCBIblast(input,eValue)
 @
 
@@ -71,41 +76,52 @@ De functie $NCBIlocal$ kan gebruikt worden vanaf Windowns en wanneer het BLAST+ 
 \subsection*{Overige functies}
 Voor het omzetten van een matrix of dataframe met probe namen en sequenties naar een bestand in FASTA-formaat kan de functie $fastaRewrie$ gebruikt worden. Deze functie is vooral nuttig in combinatie met $BLASTlocal$ en schrijft daarom zijn resultaat direct naar de HDD.
 
-Voor het verwerken van BLAST resultaten kan het nuttig zijn om te weten bij welke basenummers en al geanotteerd gen start en eindigt. Veel van deze gegevens zijn beschikbaar op de FTP-servers van NCBI\cite{NCBIftp}. De functie $geneRange$ interpreteerd .ptt en .rtn bestanden en geeft de start en stop posities van de beschikbare genen weer.
+Voor het verwerken van BLAST resultaten kan het nuttig zijn om te weten bij welke basenummers en al geanotteerd gen start en eindigt. Veel van deze gegevens zijn beschikbaar op de FTP-servers van NCBI\cite{NCBIftp}. De functie $geneRange$ interpreteert NCBI .ptt en .rtn bestanden en geeft de start en stop posities van de beschikbare genen weer.
 
-\section*{Work in progres}
-
+\section*{Mogelijke verbeteringen}
+Het pakket BLASTnParse kan al gebruikt worden, maar er zijn nog vele mogelijkheden om de functionaliteit te verbeteren of uit te breiden. Hieronder een selectie van de meest in het oog springende ideeen:
+\begin{itemize}
+\item Http header check in de wormbase en arabidopsis functies.
+\item Toevoegen mirrors voor wormbase.
+\item Testen blastLocal op andere besturingsystemen en hiervoor ondersteuning toevoegen.
+\item NCBIsubmit aanpassen zodat de BLASTs tot de gekozen databases/organismen beperkt kan worden.
+\item Meer consistente in- en uitvoer van de verschillende functies.
+\item Grafische representatie van verdeling aantal resultaten van geblaste sequenties.
+\end{itemize}
 
 \section*{Persoonlijke ervaring vak}
 De 6 weken die voor \emph{Computational Molecular Biology Research} staan zijn in rap tempo omgevlogen. De eerste week met de tutorial was erg nuttig. Doordat ik al eens met R gewerkt had en al iets vaker geprogrameeerd dan de andereen merkte ik dat ik een soort vraagbaak werd. Dit heb ik op een gegeven moment wat afgeremd omdat ik zelf nergens meer aan toe kwam.
 
 Na de eerste week was ik blij dat we los mochten met het project. Het was voor mij niet direct duidelijk wat ik moest gaan doen, daarom ben ik mij maar eerst gaan inlezen in hoe een r-package te maken. Daarna ben ik aan de slag gegaan met het blast formulier van wormbase.org. Al het begin is moeilijk en het er waren was af en toe best wat geploeter nodig om ogenschijnlijk simpele dingen op te lossen. Met deze nog vrij simpele functies heb ik toch al een dataset voor Joeri kunnen verwerken.
 
-Het ploeteren kwam tot een hoogtepunt bij het uitzoeken van hoe het NCBI qblast/urlapi programma werkte (welk naampje ze willen me zelfs nog niet eens duidelijk). De documentatie van NCBI was mager en soms misleidend, en heeft me veel tijdsverlies opgeleverd. Op een gegeven moment heb ik Danny toch maar even gevraagd of er niet een andere oplossing was. Dit had ik wellicht iets eerder moeten doen.
+Het ploeteren kwam tot een hoogtepunt bij het uitzoeken van hoe het NCBI qblast/urlapi programma werkte (welk naampje ze willen is me zelfs nog niet eens duidelijk). De documentatie van NCBI was mager en soms misleidend, en heeft me veel tijdsverlies opgeleverd. Op een gegeven moment heb ik Danny toch maar even gevraagd of er niet een andere oplossing was. Dit had ik wellicht iets eerder moeten doen.
 Hierna ben ik overgestapt op de lokale blast+ oplossing van NCBI, deze was aanmerkelijk prettiger en sneller om mee te werken. Hiermee kon ik ook een tweede dataset van Joeri en een dataset van Bart mee verwerken. 
 
-sHierna heb ik veel documentatie geschreven en functies omgeschreven zodat ze in het package BLASTnParse konden worden opgenomen. Rond deze tijd had ik soms niet echt een goed overzicht nu precies van mij verwacht werd aan het eind van het vak. Verder is het sowieso bij dit vak lastig te bepalen hoe er beoordeeld word, en of je op weg bent naar een onvoldoende of juist naar een mooi cijfer. 
+Hierna heb ik veel documentatie geschreven en functies omgeschreven zodat ze in het package BLASTnParse konden worden opgenomen. Rond deze tijd had ik soms niet echt een goed overzicht nu precies van mij verwacht werd aan het eind van het vak. Verder is het sowieso bij dit vak lastig te bepalen hoe er beoordeeld word, en of je op weg bent naar een onvoldoende of juist naar een mooi cijfer. 
 
 %-------------%
 % Referenties %
 %-------------%
-\renewcommand{\refname}{Referenties}
 \begin{thebibliography}{9}
+  \bibitem{seq}
+    Wetterstrand KA. DNA Sequencing Costs: Data from the NHGRI Large-Scale Genome Sequencing Program Available at: \url{www.genome.gov/sequencingcosts/}. Bezocht op 24-03-2012 12:43.
+  \bibitem{BLAST}
+    NCBI, \emph{Basic Local Alignment Search Tool}, \url{http://blast.ncbi.nlm.nih.gov/Blast.cgi}, bezocht op 24-03-2012 13:02
   \bibitem{Rcran}
     R Development Core Team, \emph{R: A Language and Environment for Statistical Computing}
     \url{www.R-project.org} 2011.
   \bibitem{RCurl}
     General network (HTTP/FTP/...) client interface for R, \emph{Duncan Temple Lang}, version 1.91.1.
   \bibitem{Wormbase}
-    Wormbase, \emph{Wormbase Release WS229}. \url{www.wormbase.org/db/searches/blast_blat} Bezocht op: 21-04-2012, 3:56.
-  \bibitem{qblast}
-    NCBI QBlast, \emph{Tao Tao, PhD}. \url{ncbi.nlm.nih.gov/staff/tao/URLAPI/new/BLAST_URLAPI.html} Bezocht op: 21-04-2012, 4:19.
+    Wormbase, \emph{Wormbase Release WS229}. \url{www.wormbase.org/db/searches/blast_blat} Bezocht op: 21-03-2012, 3:56.
   \bibitem{Arab}
-    TAIR BLAST 2.2.8, \emph{Carnegie Institution for Science Department of Plant Biology}, Bezocht op: 22-04-2012 16:06.
+    TAIR BLAST 2.2.8, \emph{Carnegie Institution for Science Department of Plant Biology}, Bezocht op: 22-03-2012 16:06.
+  \bibitem{qblast}
+    NCBI QBlast, \emph{Tao Tao, PhD}. \url{ncbi.nlm.nih.gov/staff/tao/URLAPI/new/BLAST_URLAPI.html} Bezocht op: 21-03-2012, 4:19.
   \bibitem{NCBIfasta}
-    FASTA description, \url{http://www.ncbi.nlm.nih.gov/BLAST/blastcgihelp.shtml}, Bezocht op: 23-04-2012 11:14.
+    FASTA description, \url{http://www.ncbi.nlm.nih.gov/BLAST/blastcgihelp.shtml}, Bezocht op: 23-03-2012 11:14.
   \bibitem{NCBIftp}
-    NCBI ftp servers, \url{ftp://ftp.ncbi.nih.gov/genomes/}, bezocht op 23-04-2012 11:30
+    NCBI ftp servers, \url{ftp://ftp.ncbi.nih.gov/genomes/}, bezocht op 23-03-2012 11:30
 \end{thebibliography}
 
 
